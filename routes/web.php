@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Middleware\Admin;
+use App\Http\Middleware\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,52 +41,38 @@ Route::get('/user/reservation', function () {
 });
 
 //All Role Side
-Route::get('/homepage', [AdminController::class, 'homePage'])->name('homePage');
+Route::get('/homepage', [AuthController::class, 'homePage'])->name('homePage');
 
 //Admin Side
 Route::group(['middleware' => Admin::class], function () {
     
     Route::get('/admin/dashboard', [AdminController::class, 'dashboardPage'])->name('dashboardPage');
 
+    /* ADMIN-USER */
+    Route::get('/admin/user/user-entries', [AdminController::class, 'userPage'])->name('userPage');
+    Route::get('/admin/user/user-create', [AdminController::class, 'userCreatePage'])->name('userCreatePage');
+    Route::get('/admin/user/user-edit', [AdminController::class, 'userEditPage'])->name('userEditPage');
+
+    /* ADMIN-INSTRUMENT */
+    Route::get('/admin/instrument/instrument-entries', [AdminController::class, 'instrumentPage'])->name('instrumentPage');
+    Route::get('/admin/instrument/instrument-create', [AdminController::class, 'instrumentCreatePage'])->name('instrumentCreatePage');
+    Route::get('/admin/instrument/instrument-edit', [AdminController::class, 'instrumentEditPage'])->name('instrumentEditPage');
+
+    /* ADMIN-CATEGORY */
+    Route::get('/admin/categories/categories-entries', [AdminController::class, 'categoryPage'])->name('categoryPage');
+    Route::get('/admin/categories/categories-create', [AdminController::class, 'categoryCreatePage'])->name('categoryCreatePage');
+    Route::get('/admin/categories/categories-edit', [AdminController::class, 'categoryEditPage'])->name('categoryEditPage');
+
+    /* ADMIN-RESERVATIOn */
+    Route::get('/admin/peminjaman/reservation-entries', [AdminController::class, 'reservationPage'])->name('reservationPage');
+    
     
 });
 
-Route::get('/admin/user/entries', function () {
-    return view('admin.user.userEntries');
-});
+//User Side
+Route::group(['middleware' => User::class], function () {
+    
+    Route::get('/user/myprofile', [UserController::class, 'myProfilePage'])->name('myProfilePage');
+    Route::get('/user/myreservation', [UserController::class, 'myReservationPage'])->name('myReservationPage');
 
-Route::get('/admin/user/create', function () {
-    return view('admin.user.userCreate');
-});
-
-Route::get('/admin/user/edit', function () {
-    return view('admin.user.userEdit');
-});
-
-Route::get('/admin/categories/entries', function () {
-    return view('admin.categories.categoriesEntries');
-});
-
-Route::get('/admin/categories/create', function () {
-    return view('admin.categories.categoriesCreate');
-});
-
-Route::get('/admin/categories/edit', function () {
-    return view('admin.categories.categoriesEdit');
-});
-
-Route::get('/admin/instrument/entries', function () {
-    return view('admin.instrument.instrumentEntries');
-});
-
-Route::get('/admin/instrument/create', function () {
-    return view('admin.instrument.instrumentCreate');
-});
-
-Route::get('/admin/instrument/edit', function () {
-    return view('admin.instrument.instrumentEdit');
-});
-
-Route::get('/admin/reservation/entries', function () {
-    return view('admin.peminjaman.reservationEntries');
 });

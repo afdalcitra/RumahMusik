@@ -90,4 +90,10 @@ class AuthController extends Controller
         Auth::logout();
         return redirect('/login');
     }
+
+    /* HOMEPAGE */
+    public function homePage(){
+        return view('user.home');
+    }
+    
 }

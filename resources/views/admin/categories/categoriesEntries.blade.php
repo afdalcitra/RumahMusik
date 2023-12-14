@@ -5,7 +5,7 @@
 
 <div class="entries-container pt-4 mt-4">
     <div class="button justify-content-center">
-        <a class="btn btn-primary" href="#" role="button">Create New Category</a>
+        <a class="btn btn-primary" href="{{ route('categoryCreatePage') }}" role="button">Create New Category</a>
     </div>
     <div class="input-group mt-4">
         <div class="col-md-12">
@@ -30,39 +30,11 @@
                 <td>Category 1</td>
                 <td class="text-end">
                     <!-- Add action buttons here -->
-                    <form action="" method="post">
-                        <button class="btn btn-primary">Edit</button>
-                        <button class="btn btn-danger">Delete</button>
-                    </form>
+                    <a class="btn btn-primary" href="{{ route('categoryEditPage') }}">Edit</a>
+                    <a class="btn btn-danger" href="">Delete</a>
                 </td>
             </tr>
             <!-- Repeat this structure for each row -->
-            <!-- Add your table rows with data here -->
-            <tr>
-                <td>Category 2</td>
-                <td class="text-end">
-                    <!-- Add action buttons here -->
-                    <form action="" method="post">
-                        <button class="btn btn-primary">Edit</button>
-                        <button class="btn btn-danger">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            <!-- Repeat this structure for each row -->
-            <!-- Add your table rows with data here -->
-            <tr>
-                <td>Category 3</td>
-                <td class="text-end">
-                    <!-- Add action buttons here -->
-                    <form action="" method="post">
-                        <button class="btn btn-primary">Edit</button>
-                        <button class="btn btn-danger">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            <!-- Repeat this structure for each row -->
-            
-            
         </tbody>
     </table>
 </div>

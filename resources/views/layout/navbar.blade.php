@@ -15,20 +15,23 @@
                             <a class="nav-link" aria-current="page" href="{{ route('dashboardPage') }}">Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Categories</a>
+                            <a class="nav-link" href="{{ route('userPage') }}">User</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Instruments</a>
+                            <a class="nav-link" href="{{ route('categoryPage') }}">Categories</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Reservation</a>
+                            <a class="nav-link" href="{{ route('instrumentPage') }}">Instruments</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('reservationPage') }}">Reservation</a>
                         </li>
                     @elseif(auth()->user()->is_admin == 0)
                         <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="{{ route('dashboardPage') }}">Dashboard</a>
+                            <a class="nav-link" aria-current="page" href="{{ route('homePage') }}">Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">My Reservation</a>
+                            <a class="nav-link" href="{{ route('myReservationPage') }}">My Reservation</a>
                         </li>
                     @endif
                 @endauth
@@ -41,10 +44,10 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="userDropdown">
                     @if(auth()->user()->is_admin == 1)
-                        <a class="dropdown-item" href="{{ route('dashboardPage') }}">Dashboard</a>
+                        <a class="dropdown-item" href="{{ route('homePage') }}">Homepage</a>
                         <div class="dropdown-divider"></div>
                     @endif
-                    <a class="dropdown-item" href="#">Lihat Profile</a>
+                    <a class="dropdown-item" href="{{ route('myProfilePage') }}">Lihat Profile</a>
                     <a id="button-logout" class="dropdown-item btn btn-danger" style="border-color: #D4E9F7;" onclick="document.getElementById('logoutForm').submit();">Logout</a>
                     <form action="{{ route('logout') }}" method="POST" id="logoutForm">
                         @csrf

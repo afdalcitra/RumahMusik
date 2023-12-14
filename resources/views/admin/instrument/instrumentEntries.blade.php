@@ -5,7 +5,7 @@
 
 <div class="entries-container pt-4 mt-4">
     <div class="button justify-content-center">
-        <a class="btn btn-primary" href="#" role="button">Create New Instrument</a>
+        <a class="btn btn-primary" href="{{ route('instrumentCreatePage') }}" role="button">Create New Instrument</a>
     </div>
     <div class="input-group mt-4">
         <div class="col-md-12">
@@ -40,10 +40,8 @@
                 <td>Bass yang terbuat dari bahan elektrik kayanya</td>
                 <td class="text-end">
                     <!-- Add action buttons here -->
-                    <form action="" method="post">
-                        <button class="btn btn-primary">Edit</button>
-                        <button class="btn btn-danger">Delete</button>
-                    </form>
+                    <a class="btn btn-primary" href="{{ route('instrumentEditPage') }}">Edit</a>
+                    <a class="btn btn-danger" href="">Delete</a>
                 </td>
             </tr>
             <!-- Repeat this structure for each row -->
