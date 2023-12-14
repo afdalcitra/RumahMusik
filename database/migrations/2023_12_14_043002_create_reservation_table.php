@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('tanggal_peminjaman');
             $table->date('tanggal_dikembalikan')->nullable();
             $table->integer('total_price')->nullable();
-            $table->integer('penalty')->nullable();
+            $table->string('penalty')->nullable();
             $table->timestamps();
         });
     }

@@ -8,9 +8,11 @@ use App\Models\User;
 use App\Models\Instrument;
 use App\Models\Reservation;
 use App\Models\Category;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
+
 
 
 class AdminController extends Controller
@@ -284,8 +286,72 @@ class AdminController extends Controller
 
     /* ======================== ADMIN-RESERVATION ======================== */
     public function reservationPage(){
-        return view('admin.peminjaman.reservationEntries');
+        $reservations = Reservation::all(); // Ambil semua data reservasi
+        foreach ($reservations as $reservation) {
+            if (!$reservation->tanggal_dikembalikan) {
+                $tanggalPeminjaman = Carbon::parse($reservation->tanggal_peminjaman);
+                $hariIni = Carbon::now();
+                $selisihHari = $hariIni->diffInDays($tanggalPeminjaman, false);
+    
+                // Jika selisih hari lebih dari 5, tambahkan pesan "Terlambat"
+                if ($selisihHari > 5) {
+                    $reservation->penalty = 'Terlambat ' . $selisihHari . ' hari';
+                }
+            }
+        }
+        return view('admin.peminjaman.reservationEntries', compact('reservations'));
     }
+
+    public function returnInstrument($id)
+    {   
+        $reservation = Reservation::findOrFail($id);
+
+        // Cek jika reservasi sudah ditandai dikembalikan
+        if ($reservation->tanggal_dikembalikan) {
+            return redirect()->back()->with('error', 'Instrument already returned.');
+        }
+
+        // Hitung selisih hari
+        $tanggalPeminjaman = Carbon::parse($reservation->tanggal_peminjaman);
+        $hariIni = Carbon::now();
+        $selisihHari = $hariIni->diffInDays($tanggalPeminjaman, false);
+
+        // Periksa jika peminjaman terlambat (lebih dari 0 hari)
+        if ($selisihHari > 0) {
+        // Hitung biaya penalty (misalnya, biaya 10.000 per hari)
+            $biayaPenaltyPerHari = 10000;
+            $biayaPenalty = $selisihHari * $biayaPenaltyPerHari;
+            $reservation->penalty = 'Terlambat ' . $selisihHari . ' hari. Biaya Penalty: Rp ' . number_format($biayaPenalty, 0, ',', '.');
+            } else {
+            $reservation->penalty = null;
+        }
+
+        // Tandai sebagai dikembalikan dengan tanggal saat ini
+        $reservation->tanggal_dikembalikan = Carbon::now();
+        $reservation->save();
+
+        return redirect()->back()->with('success', 'Instrument returned successfully.');
+
+        
+    }
+    
+    public function deleteReservation($id)
+    {
+        // Cari reservasi berdasarkan ID
+        $reservation = Reservation::find($id);
+    
+        // Periksa apakah reservasi ditemukan
+        if (!$reservation) {
+            return redirect()->back()->with('error', 'Reservasi tidak ditemukan');
+        }
+    
+        // Hapus reservasi
+        $reservation->delete();
+    
+        return redirect()->back()->with('success', 'Reservasi berhasil dihapus');
+    }
+    
+
 
     /* ======================== ADMIN-USER ======================== */
     public function userPage(Request $request){
@@ -405,6 +471,23 @@ class AdminController extends Controller
         }
     
         return redirect()->route('userPage');
+    }
+
+    //USER HISTORY 
+    public function userHistoryPage($id)
+    {
+        // Ambil data pengguna berdasarkan ID
+        $user = User::find($id);
+    
+        // Pastikan pengguna bukan admin
+        if (!$user || $user->is_admin) {
+            return redirect()->back()->with('error', 'Tidak dapat mengakses history pengguna.');
+        }
+    
+        // Ambil data reservasi berdasarkan ID pengguna
+        $userReservations = Reservation::where('user_id', $id)->get();
+    
+        return view('admin.user.history', compact('user', 'userReservations'));
     }
     
 }

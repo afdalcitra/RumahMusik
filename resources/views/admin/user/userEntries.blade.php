@@ -37,6 +37,7 @@
                 <th>Role</th>
                 <th>Email</th>
                 <th class="text-end">Action</th>
+                <th class="text-end">History</th> <!-- Tambahkan kolom History -->
             </tr>
         </thead>
         <tbody>
@@ -49,6 +50,13 @@
                         <!-- Add action buttons here -->
                         <a class="btn btn-primary" href="{{ route('userEditPage', ['id' => $user->id]) }}">Edit</a>
                         <a class="btn btn-danger" href="{{ route('userDelete', ['id' => $user->id]) }}">Delete</a>
+                    </td>
+                    <td class="text-end">
+                        @if (!$user->is_admin)
+                            <a class="btn btn-info" href="{{ route('admin.userHistoryPage', ['id' => $user->id]) }}">History</a>
+                        @else
+                            - <!-- Tidak perlu tombol History untuk admin -->
+                        @endif
                     </td>
                 </tr>
             @endforeach

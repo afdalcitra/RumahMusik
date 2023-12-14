@@ -65,6 +65,11 @@ Route::group(['middleware' => Admin::class], function () {
     //DELETE USER
     Route::get('/admin/user/delete/{id}', [AdminController::class, 'userDelete'])->name('userDelete');
 
+    //History USER
+    Route::get('/admin/user/history/{id}', [AdminController::class, 'userHistoryPage'])->name('admin.userHistoryPage');
+
+
+
     /* ======================== ADMIN-INSTRUMENT ======================== */
     Route::get('/admin/instrument/instrument-entries', [AdminController::class, 'instrumentPage'])->name('instrumentPage');
     Route::get('/admin/instrument/instrument-create', [AdminController::class, 'instrumentCreatePage'])->name('instrumentCreatePage');
@@ -102,6 +107,13 @@ Route::group(['middleware' => Admin::class], function () {
     /* ======================== ADMIN-RESERVATION ======================== */
     Route::get('/admin/peminjaman/reservation-entries', [AdminController::class, 'reservationPage'])->name('reservationPage');
     
+    /* ======================== ADMIN-RETURN-INSTRUMENT ======================== */
+    Route::get('/admin/reservation', [AdminControllerNew::class, 'reservationPage'])->name('admin.reservation');
+    Route::post('/admin/return-instrument/{id}', [AdminControllerNew::class, 'returnInstrument'])->name('admin.returnInstrument');
+    // Route::delete('/admin/delete-reservation/{id}', 'AdminController@deleteReservation')->name('deleteReservation');
+    Route::delete('/admin/delete-reservation/{id}', [AdminController::class, 'deleteReservation'])->name('deleteReservation');
+
+
     
 });
 

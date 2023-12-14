@@ -20,48 +20,56 @@
             <tr>
                 <th>Username</th>
                 <th>Instrument</th>
-                <th>Rented at</th>
-                <th>Returned at</th>
-                <th>Price</th>
+                <th>Tanggal Peminjaman</th>
+                <th>Tanggal Dikembalikan</th>
+                <th>Total Price</th>
+                <th>Terlambat</th> <!-- Kolom Terlambat -->
                 <th>Penalty</th>
                 <th class="text-end">Action</th>
             </tr>
         </thead>
         <tbody>
-            <!-- Add your table rows with data here -->
-            <tr>
-                <td>John Doe</td>
-                <td>Bass Listrik</td>
-                <td>2023-12-15</td>
-                <td>-</td>
-                <td>Rp150000</td>
-                <td>-</td>
-                <td class="text-end">
-                    <!-- Add action buttons here -->
-                    <form action="" method="post">
-                        <button class="btn btn-primary">Returned</button>
-                        <button class="btn btn-danger">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            <!-- Add your table rows with data here -->
-            <tr>
-                <td>Mary Doe</td>
-                <td>Drumset</td>
-                <td>2023-12-12</td>
-                <td>2023-12-13</td>
-                <td>Rp150000</td>
-                <td>-</td>
-                <td class="text-end">
-                    <!-- Add action buttons here -->
-                    <form action="" method="post">
-                        <button class="btn btn-danger">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            <!-- Repeat this structure for each row -->
-            <!-- Repeat this structure for each row -->
-            
+            @foreach ($reservations as $reservation)
+                <tr>
+                    <td>{{ $reservation->users->username }}</td>
+                    <td>{{ $reservation->instrument->name }}</td>
+                    <td>{{ $reservation->tanggal_peminjaman }}</td>
+                    <td>{{ $reservation->tanggal_dikembalikan ?? '-' }}</td>
+                    <td>{{ $reservation->total_price ?? '-' }}</td>
+                    <td>
+                        @php
+                            $tanggalPeminjaman = \Carbon\Carbon::parse($reservation->tanggal_peminjaman);
+                            $hariIni = \Carbon\Carbon::now();
+                            $selisihHari = $hariIni->diffInDays($tanggalPeminjaman, false);
+                        @endphp
+                        @if ($selisihHari > 0 && is_null($reservation->tanggal_dikembalikan))
+                            Telat {{ $selisihHari }} hari
+                        @else
+                            -
+                        @endif
+                    </td>
+                    <td>
+                        @if ($reservation->penalty)
+                            {{ $reservation->penalty }}
+                        @else
+                            -
+                        @endif
+                    </td>
+                    <td class="text-end">
+                        @if (is_null($reservation->tanggal_dikembalikan))
+                            <form action="{{ route('returnInstrument', $reservation->id) }}" method="post">
+                                @csrf
+                                <button class="btn btn-primary">Returned</button>
+                            </form>
+                        @endif
+                        <form action="{{ route('deleteReservation', $reservation->id) }}" method="post">
+                            @csrf
+                            @method('delete')
+                            <button class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            @endforeach
         </tbody>
     </table>
 </div>
