@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,8 +16,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+//Landing Page
+Route::get('/', [AuthController::class, 'landHandling'])->name('landHandling');
+
 //All Side
-Route::get('/', function () {
+Route::get('/homepage', function () {
     return view('user.home');
 });
 
