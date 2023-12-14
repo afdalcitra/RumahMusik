@@ -10,6 +10,8 @@ use App\Models\Reservation;
 use App\Models\Category;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
+
 
 class AdminController extends Controller
 {
@@ -127,16 +129,157 @@ class AdminController extends Controller
     }
 
     /* ======================== ADMIN-INSTRUMENT ======================== */
-    public function instrumentPage(){
-        return view('admin.instrument.instrumentEntries');
+    public function instrumentPage(Request $request){
+
+        $search = $request->input('search');
+        $instruments = Instrument::where('name', 'like', '%' . $search . '%')->paginate(10);
+
+        return view('admin.instrument.instrumentEntries', compact('instruments'));
+        
     }
 
     public function instrumentCreatePage(){
         return view('admin.instrument.instrumentCreate');
     }
 
-    public function instrumentEditPage(){
-        return view('admin.instrument.instrumentEdit');
+    public function instrumentEditPage($id){
+
+        // Find the category by ID
+        $instrument = Instrument::find($id);
+    
+        // Pass the category data to the view
+        return view('admin.instrument.instrumentEdit', compact('instrument'));
+
+    }
+
+    //CREATE INSTRUMENT
+    public function createInstrument(Request $request)
+    {
+        // Validate form data
+        $request->validate([
+            'code' => 'required',
+            'name' => 'required',
+            'price' => 'required',
+            'images' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // add validation for image files
+            'description' => 'required',
+        ]);
+
+        try {
+            // Create a new instrument with the provided attributes
+            $instrument = Instrument::create([
+                'code' => $request->input('code'),
+                'name' => $request->input('name'),
+                'price' => $request->input('price'),
+                'description' => $request->input('description'),
+            ]);
+        
+            // Check if a new file was uploaded
+            if ($request->hasFile('images')) {
+                // Get the file from the request
+                $file = $request->file('images');
+        
+                // Generate a unique filename
+                $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+        
+                // Move the file to the storage directory
+                $file->move(public_path('images'), $fileName);
+        
+                // Update the instrument with the new file name
+                $instrument->image = $fileName;
+                $instrument->save();
+        
+                // Log success message
+                Log::info('Instrument image uploaded successfully. Filename: ' . $fileName);
+            }
+        
+            Session::flash('success', 'Instrument created successfully');
+        } catch (\Exception $e) {
+            // Log the detailed error message
+            Log::error('Error creating instrument: ' . $e->getMessage());
+        
+            // Flash a generic error message
+            Session::flash('error', 'Error creating instrument. Please check the logs for more details.');
+        }
+
+        return redirect()->route('instrumentPage');
+    }
+
+    //SEARCH INSTRUMENT
+    public function instrumentSearch(Request $request)
+    {
+        // Redirect to the userPage method with the search query
+        return $this->instrumentPage($request);
+    }
+
+
+    //EDIT INSTRUMENT
+    public function updateInstrument(Request $request, $id)
+    {
+        // Validate form data
+        $request->validate([
+            'code' => 'required',
+            'name' => 'required',
+            'price' => 'required',
+            'images' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // add validation for image files
+            'description' => 'required',
+        ]);
+
+        try {
+            // Find the instrument by ID
+            $instrument = Instrument::find($id);
+
+            // Update instrument data
+            $instrument->code = $request->input('code');
+            $instrument->name = $request->input('name');
+            $instrument->price = $request->input('price');
+            $instrument->description = $request->input('description');
+
+            // Check if a new file was uploaded
+            if ($request->hasFile('images')) {
+                // Get the file from the request
+                $file = $request->file('images');
+
+                // Generate a unique filename
+                $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+                // Move the file to the storage directory
+                $file->move(public_path('images'), $fileName);
+
+                // Delete the old image (optional)
+                if ($instrument->images) {
+                    $existingImagePath = public_path('images') . '/' . $instrument->images;
+                    if (file_exists($existingImagePath)) {
+                        unlink($existingImagePath);
+                    }
+                }
+
+                // Update the instrument with the new file name
+                $instrument->image = $fileName;
+            }
+
+            $instrument->save();
+
+            Session::flash('success', 'Instrument updated successfully');
+        } catch (\Exception $e) {
+            Session::flash('error', 'Error updating instrument');
+        }
+
+        return redirect()->route('instrumentPage');
+    }
+
+
+    //DELETE INSTRUMENT
+    public function instrumentDelete($id){
+
+        try{
+            Instrument::destroy($id);
+            Session::flash('success', 'Instrument deleted successfully');
+        } catch (\Exception $e) {
+            Session::flash('error', 'Error deleting instrument');
+        }
+
+        return redirect()->route('instrumentPage');
+
     }
 
     /* ======================== ADMIN-RESERVATION ======================== */

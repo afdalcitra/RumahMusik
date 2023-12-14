@@ -68,10 +68,20 @@ Route::group(['middleware' => Admin::class], function () {
     /* ======================== ADMIN-INSTRUMENT ======================== */
     Route::get('/admin/instrument/instrument-entries', [AdminController::class, 'instrumentPage'])->name('instrumentPage');
     Route::get('/admin/instrument/instrument-create', [AdminController::class, 'instrumentCreatePage'])->name('instrumentCreatePage');
-    Route::get('/admin/instrument/instrument-edit', [AdminController::class, 'instrumentEditPage'])->name('instrumentEditPage');
+    Route::get('/admin/instrument/instrument-edit/{id}', [AdminController::class, 'instrumentEditPage'])->name('instrumentEditPage');
 
-    
-    
+    //CREATE INSTRUMENT
+    Route::post('/admin/instrument/instrument-create', [AdminController::class, 'createInstrument'])->name('admin.instrument.create');
+
+    //SEARCH INSTRUMENT
+    Route::post('/admin/instrument/search', [AdminController::class, 'instrumentSearch'])->name('instrumentSearch');
+
+    //EDIT INSTRUMENT
+    Route::post('/admin/instrument/instrument-update/{id}', [AdminController::class, 'updateInstrument'])->name('instrumentUpdate');
+
+    //DELETE INSTRUMENT
+    Route::get('/admin/instrument/delete/{id}', [AdminController::class, 'instrumentDelete'])->name('instrumentDelete');
+
     /* ======================== ADMIN-CATEGORY ======================== */
     Route::get('/admin/categories/categories-entries', [AdminController::class, 'categoryPage'])->name('categoryPage');
     Route::get('/admin/categories/categories-create', [AdminController::class, 'categoryCreatePage'])->name('categoryCreatePage');

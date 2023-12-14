@@ -8,21 +8,22 @@
         <div class="col-12 col-sm-8 col-md-12 m-auto">
             <div class="card border-0 shadow">
                 <div class="card-body">
-                    <form action="" method="post" onsubmit="return validateForm()">
+                    <form action="{{ route('admin.instrument.create') }}" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+                    @csrf
                         <h1>Create New Instrument</h1>
                         <p>Please fill out the form below to create a new instrument!</p>
                         <label for="code" class="">Code</label>
-                        <input type="text" name="" id="" class="form-control py-2 mb-4" placeholder="Instrument Code" required>
+                        <input type="text" name="code" id="code" class="form-control py-2 mb-4" placeholder="Instrument Code" required>
                         
                         <label for="name" class="">Name</label>
-                        <input type="text" name="" id="" class="form-control py-2 mb-4" placeholder="Instrument Name" required>
+                        <input type="text" name="name" id="name" class="form-control py-2 mb-4" placeholder="Instrument Name" required>
                         
                         <label for="price" class="">Price</label>
-                        <input type="number" name="" id="" class="form-control py-2 mb-3" placeholder="Instrument Price" required>
+                        <input type="number" name="price" id="price" class="form-control py-2 mb-3" placeholder="Instrument Price" required>
 
                         <div class="py-2 mb-3">
                             <label for="formFile" class="form-label">Images</label>
-                            <input class="form-control" type="file" id="formFile" required accept=".jpg, .jpeg, .webp, .png">
+                            <input class="form-control" type="file" id="formFile" name="images" required>
                         </div>
                         
                         <div class="category-select-container">
@@ -49,7 +50,7 @@
 
                         <div class="py-2 mb-3">
                             <label for="exampleFormControlTextarea1" class="form-label">Description</label>
-                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Instrument Description" required></textarea>
+                            <input type="text" name="description" id="description" class="form-control py-2 mb-3" placeholder="Instrument Description" required>
                         </div>
 
                         <div class="text-center py-2 mb-3">

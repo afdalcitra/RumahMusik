@@ -8,21 +8,22 @@
         <div class="col-12 col-sm-8 col-md-12 m-auto">
             <div class="card border-0 shadow">
                 <div class="card-body">
-                    <form action="" method="post">
+                    <form action="{{ route('instrumentUpdate', ['id' => $instrument->id]) }}" method="post" enctype="multipart/form-data">
+                        @csrf
                         <h1>Edit Instrument</h1>
                         <p>You can change the content of the form to update the instrument details</p>
                         <label for="code" class="">Code</label>
-                        <input type="text" name="" id="" class="form-control py-2 mb-4" placeholder="Instrument Code" required>
+                        <input type="text" name="code" id="code" class="form-control py-2 mb-4" placeholder="Instrument Code" value="{{ $instrument->code }}" required>
                         
                         <label for="name" class="">Name</label>
-                        <input type="text" name="" id="" class="form-control py-2 mb-4" placeholder="Instrument Name" required>
+                        <input type="text" name="name" id="name" class="form-control py-2 mb-4" placeholder="Instrument Name" value="{{ $instrument->name }}" required>
                         
                         <label for="price" class="">Price</label>
-                        <input type="number" name="" id="" class="form-control py-2 mb-3" placeholder="Instrument Price" required>
+                        <input type="number" name="price" id="price" class="form-control py-2 mb-3" placeholder="Instrument Price" value="{{ $instrument->price }}" required>
 
                         <div class="py-2 mb-3">
                             <label for="formFile" class="form-label">Images</label>
-                            <input class="form-control" type="file" id="formFile">
+                            <input class="form-control" type="file" id="formFile" name="images">
                         </div>
                         
                         <label for="category-select" class="">Category</label>
@@ -34,7 +35,7 @@
 
                         <div class="py-2 mb-3">
                             <label for="exampleFormControlTextarea1" class="form-label">Description</label>
-                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Instrument Description"></textarea>
+                            <input type="text" name="description" id="description" class="form-control py-2 mb-3" placeholder="Instrument Description" value="{{ $instrument->description }}" required>
                         </div>
 
                         <div class="text-center py-2 mb-3">
@@ -42,6 +43,16 @@
                                 Update Instrument
                             </button>
                         </div>
+
+                        @if($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
 
                     </form>
                 </div>
