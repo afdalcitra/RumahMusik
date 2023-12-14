@@ -16,7 +16,6 @@
                     <th>Tanggal Peminjaman</th>
                     <th>Tanggal Pengembalian</th>
                     <th>Total Harga</th>
-                    <th>Terlambat</th>
                     <th>Penalty</th>
                 </tr>
             </thead>
@@ -27,7 +26,6 @@
                         <td>{{ $reservation->tanggal_peminjaman }}</td>
                         <td>{{ $reservation->tanggal_dikembalikan ?? '-' }}</td>
                         <td>{{ $reservation->total_price ?? '-' }}</td>
-                        <td>{{ $reservation->terlambat ?? '-' }}</td>
                         <td>{{ $reservation->penalty ?? '-' }}</td>
                     </tr>
                 @endforeach

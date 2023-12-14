@@ -106,12 +106,12 @@ Route::group(['middleware' => Admin::class], function () {
 
     /* ======================== ADMIN-RESERVATION ======================== */
     Route::get('/admin/peminjaman/reservation-entries', [AdminController::class, 'reservationPage'])->name('reservationPage');
-    
-    /* ======================== ADMIN-RETURN-INSTRUMENT ======================== */
     Route::get('/admin/reservation', [AdminControllerNew::class, 'reservationPage'])->name('admin.reservation');
-    Route::post('/admin/return-instrument/{id}', [AdminControllerNew::class, 'returnInstrument'])->name('admin.returnInstrument');
-    // Route::delete('/admin/delete-reservation/{id}', 'AdminController@deleteReservation')->name('deleteReservation');
+    Route::post('/admin/return-instrument/{id}', [AdminController::class, 'returnInstrument'])->name('admin.returnInstrument');
     Route::delete('/admin/delete-reservation/{id}', [AdminController::class, 'deleteReservation'])->name('deleteReservation');
+    Route::post('/admin/reservations/search', [AdminController::class, 'searchReservations'])->name('searchReservations');
+
+
 
 
     

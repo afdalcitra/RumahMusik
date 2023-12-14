@@ -303,37 +303,36 @@ class AdminController extends Controller
     }
 
     public function returnInstrument($id)
-    {   
+    {
         $reservation = Reservation::findOrFail($id);
-
+    
         // Cek jika reservasi sudah ditandai dikembalikan
         if ($reservation->tanggal_dikembalikan) {
             return redirect()->back()->with('error', 'Instrument already returned.');
         }
-
+    
         // Hitung selisih hari
         $tanggalPeminjaman = Carbon::parse($reservation->tanggal_peminjaman);
-        $hariIni = Carbon::now();
-        $selisihHari = $hariIni->diffInDays($tanggalPeminjaman, false);
-
-        // Periksa jika peminjaman terlambat (lebih dari 0 hari)
-        if ($selisihHari > 0) {
-        // Hitung biaya penalty (misalnya, biaya 10.000 per hari)
+        $tanggalDikembalikan = Carbon::now();
+        $selisihHari = $tanggalDikembalikan->diffInDays($tanggalPeminjaman);
+    
+        // Periksa jika peminjaman terlambat (lebih dari 5 hari)
+        if ($selisihHari > 5) {
+            // Hitung biaya penalty (misalnya, biaya 10.000 per hari)
             $biayaPenaltyPerHari = 10000;
-            $biayaPenalty = $selisihHari * $biayaPenaltyPerHari;
-            $reservation->penalty = 'Terlambat ' . $selisihHari . ' hari. Biaya Penalty: Rp ' . number_format($biayaPenalty, 0, ',', '.');
-            } else {
+            $biayaPenalty = ($selisihHari - 5) * $biayaPenaltyPerHari;
+            $reservation->penalty = 'Terlambat ' . ($selisihHari - 5) . ' hari. Biaya Penalty: Rp ' . number_format($biayaPenalty, 0, ',', '.');
+        } else {
             $reservation->penalty = null;
         }
-
+    
         // Tandai sebagai dikembalikan dengan tanggal saat ini
-        $reservation->tanggal_dikembalikan = Carbon::now();
+        $reservation->tanggal_dikembalikan = $tanggalDikembalikan;
         $reservation->save();
-
+    
         return redirect()->back()->with('success', 'Instrument returned successfully.');
-
-        
     }
+    
     
     public function deleteReservation($id)
     {
@@ -351,6 +350,19 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'Reservasi berhasil dihapus');
     }
     
+    //Search Reservation
+    public function searchReservations(Request $request)
+    {
+        $keyword = $request->input('search');
+
+        // Lakukan pencarian berdasarkan username pengguna
+        $reservations = Reservation::whereHas('users', function ($query) use ($keyword) {
+            $query->where('username', 'like', "%$keyword%");
+        })->get();
+
+        // Kembali ke halaman dengan hasil pencarian
+        return view('admin.peminjaman.reservationEntries', compact('reservations'));
+    }
 
 
     /* ======================== ADMIN-USER ======================== */
