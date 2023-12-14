@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
+use App\Http\Middleware\Admin;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,12 +30,6 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-
-//All Side
-Route::get('/homepage', function () {
-    return view('user.home');
-});
-
 //User Side
 Route::get('/user/profile', function () {
     return view('user.viewProfile');
@@ -44,9 +39,15 @@ Route::get('/user/reservation', function () {
     return view('user.viewReservation');
 });
 
+//All Role Side
+Route::get('/homepage', [AdminController::class, 'homePage'])->name('homePage');
+
 //Admin Side
-Route::get('/admin/dashboard', function () {
-    return view('admin.dashboard');
+Route::group(['middleware' => Admin::class], function () {
+    
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboardPage'])->name('dashboardPage');
+
+    
 });
 
 Route::get('/admin/user/entries', function () {

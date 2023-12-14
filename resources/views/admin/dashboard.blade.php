@@ -1,6 +1,6 @@
 <!-- dashboard.blade.php -->
 @extends('layout.template')
-@include('layout.adminNav')
+@include('layout.navbar')
 
 @section('content')
 
