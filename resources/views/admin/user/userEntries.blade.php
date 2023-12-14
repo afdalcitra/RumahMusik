@@ -10,7 +10,7 @@
     <div class="input-group mt-4">
         <div class="col-md-12">
             <form action="{{ route('userSearch') }}" method="post" class="d-flex">
-                @csrf
+            @csrf
                 <input type="text" name="search" class="form-control form-search" placeholder="Search user name" aria-label="Recipient's username" aria-describedby="basic-addon2">
                 <button class="btn btn-primary py-2" type="submit" id="search-button">Search</button>
             </form>

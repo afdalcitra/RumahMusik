@@ -13,7 +13,7 @@ use Illuminate\Validation\Rule;
 
 class AdminController extends Controller
 {
-    /* MOVE PAGE */
+    /* ======================== MOVE PAGE ======================== */
     public function dashboardPage(){
 
         $userCount = User::count();
@@ -24,10 +24,11 @@ class AdminController extends Controller
         return view('admin.dashboard', compact('userCount', 'categoryCount', 'instrumentCount', 'reservationCount'));
     }
 
-    /* ADMIN-CATEGORY */
-    public function categoryPage(){
+    /* ======================== ADMIN-CATEGORY ======================== */
+    public function categoryPage(Request $request){
 
-        $categories = Category::paginate(10);
+        $search = $request->input('search');
+        $categories = Category::where('name', 'like', '%' . $search . '%')->paginate(10);
 
         return view('admin.categories.categoriesEntries', compact('categories'));
     }
@@ -36,11 +37,96 @@ class AdminController extends Controller
         return view('admin.categories.categoriesCreate');
     }
 
-    public function categoryEditPage(){
-        return view('admin.categories.categoriesEdit');
+    public function categoryEditPage($id){
+        // Find the category by ID
+        $category = Category::find($id);
+    
+        // Pass the category data to the view
+        return view('admin.categories.categoriesEdit', compact('category'));
     }
 
-    /* ADMIN-INSTRUMENT */
+    //CREATE CATEGORY
+    public function createCategory(Request $request)
+    {
+        // Validate form data
+        $request->validate([
+            'category' => 'required',
+        ]);
+
+        // Create a new category
+
+        try {
+
+            $category = Category::create([
+                'name' => $request->input('category'),
+            ]);
+
+            Session::flash('success', 'New category created successfully');
+            
+        } catch (\Exception $e) {
+            
+            Session::flash('error', 'Error creating new category');
+
+        }
+
+        // Redirect to the user page or any other page as needed
+        return redirect()->route('categoryPage');
+    }
+
+    //EDIT CATEGORY
+    public function updateCategory(Request $request, $id)
+    {
+        // Validate form data
+        $request->validate([
+            'category' => 'required',
+        ]);
+
+        try {
+            // Find the category by ID
+            $category = Category::find($id);
+    
+            // Update category data
+            $categoryData = [
+                'name' => $request->input('category'),
+            ];
+    
+            // Only update the password if it's provided
+            if ($request->filled('password')) {
+                $categoryData['password'] = bcrypt($request->input('password'));
+            }
+    
+            $category->update($categoryData);
+    
+            Session::flash('success', 'Category updated successfully');
+        } catch (\Exception $e) {
+            Session::flash('error', 'Error updating category');
+        }
+    
+        return redirect()->route('categoryPage');
+    }
+
+    //SEARCH CATEGORY
+    public function categorySearch(Request $request)
+    {
+        // Redirect to the userPage method with the search query
+        return $this->categoryPage($request);
+    }
+
+    //DELETE CATEGORY
+    public function categoryDelete($id){
+
+        try{
+            Category::destroy($id);
+            Session::flash('success', 'Category deleted successfully');
+        } catch (\Exception $e) {
+            Session::flash('error', 'Error deleting category');
+        }
+
+        return redirect()->route('categoryPage');
+
+    }
+
+    /* ======================== ADMIN-INSTRUMENT ======================== */
     public function instrumentPage(){
         return view('admin.instrument.instrumentEntries');
     }
@@ -53,12 +139,12 @@ class AdminController extends Controller
         return view('admin.instrument.instrumentEdit');
     }
 
-    /* ADMIN-RESERVATION */
+    /* ======================== ADMIN-RESERVATION ======================== */
     public function reservationPage(){
         return view('admin.peminjaman.reservationEntries');
     }
 
-    /* ADMIN-USER */
+    /* ======================== ADMIN-USER ======================== */
     public function userPage(Request $request){
 
         $search = $request->input('search');
