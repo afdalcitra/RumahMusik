@@ -51,7 +51,15 @@ Route::group(['middleware' => Admin::class], function () {
     /* ADMIN-USER */
     Route::get('/admin/user/user-entries', [AdminController::class, 'userPage'])->name('userPage');
     Route::get('/admin/user/user-create', [AdminController::class, 'userCreatePage'])->name('userCreatePage');
-    Route::get('/admin/user/user-edit', [AdminController::class, 'userEditPage'])->name('userEditPage');
+    Route::get('/admin/user/user-edit/{id}', [AdminController::class, 'userEditPage'])->name('userEditPage');
+    Route::post('/admin/user/user-update/{id}', [AdminController::class, 'updateUser'])->name('userUpdate');
+    Route::get('/admin/user/delete/{id}', [AdminController::class, 'userDelete'])->name('userDelete');
+
+    //CREATE USER
+    Route::post('/admin/user/user-create', [AdminController::class, 'createUser'])->name('admin.user.create');
+
+    //SEARCH USER
+    Route::post('/admin/user/search', [AdminController::class, 'userSearch'])->name('userSearch');
 
     /* ADMIN-INSTRUMENT */
     Route::get('/admin/instrument/instrument-entries', [AdminController::class, 'instrumentPage'])->name('instrumentPage');
