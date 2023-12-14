@@ -24,7 +24,10 @@ class AdminController extends Controller
 
     /* ADMIN-CATEGORY */
     public function categoryPage(){
-        return view('admin.categories.categoriesEntries');
+
+        $categories = Category::paginate(10);
+
+        return view('admin.categories.categoriesEntries', compact('categories'));
     }
 
     public function categoryCreatePage(){
@@ -55,7 +58,10 @@ class AdminController extends Controller
 
     /* ADMIN-USER */
     public function userPage(){
-        return view('admin.user.userEntries');
+
+        $users = User::paginate(10);
+
+        return view('admin.user.userEntries', compact('users'));
     }
     
     public function userCreatePage(){

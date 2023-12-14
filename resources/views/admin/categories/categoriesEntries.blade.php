@@ -25,18 +25,33 @@
             </tr>
         </thead>
         <tbody>
-            <!-- Add your table rows with data here -->
-            <tr>
-                <td>Category 1</td>
-                <td class="text-end">
-                    <!-- Add action buttons here -->
-                    <a class="btn btn-primary" href="{{ route('categoryEditPage') }}">Edit</a>
-                    <a class="btn btn-danger" href="">Delete</a>
-                </td>
-            </tr>
-            <!-- Repeat this structure for each row -->
+            @foreach ($categories as $category)
+                <tr>
+                    <td>{{ $category->name }}</td>
+                    <td class="text-end">
+                        <!-- Add action buttons here -->
+                        <a class="btn btn-primary" href="{{ route('categoryEditPage') }}">Edit</a>
+                        <a class="btn btn-danger" href="">Delete</a>
+                    </td>
+                </tr>
+            @endforeach
         </tbody>
     </table>
+
+    <!-- Display pagination links -->
+    <div class="d-flex justify-content-between align-items-center mt-2 mb-2">
+        <div>
+            @if ($categories->lastPage() > 1)
+                <div class="pagination">
+                    {{ $categories->links('pagination') }}
+                </div>
+            @endif
+        </div>
+        <div>
+            Showing {{ $categories->firstItem() }} - {{ $categories->lastItem() }} of {{ $categories->total() }} results
+        </div>
+    </div>
+
 </div>
 
 @endsection

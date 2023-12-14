@@ -27,20 +27,35 @@
             </tr>
         </thead>
         <tbody>
-            <!-- Add your table rows with data here -->
-            <tr>
-                <td>John Doe</td>
-                <td>Admin</td>
-                <td>johndoe@example.com</td>
-                <td class="text-end">
-                    <!-- Add action buttons here -->
-                    <a class="btn btn-primary" href="{{ route('userEditPage') }}">Edit</a>
-                    <a class="btn btn-danger" href="">Delete</a>
-                </td>
-            </tr>
-            <!-- Repeat this structure for each row -->         
+            @foreach ($users as $user)
+                <tr>
+                    <td>{{ $user->username }}</td>
+                    <td>{{ $user->is_admin ? 'Admin' : 'User' }}</td>
+                    <td>{{ $user->email }}</td>
+                    <td class="text-end">
+                        <!-- Add action buttons here -->
+                        <a class="btn btn-primary" href="{{ route('userEditPage', ['id' => $user->id]) }}">Edit</a>
+                        <a class="btn btn-danger" href="">Delete</a>
+                    </td>
+                </tr>
+            @endforeach
         </tbody>
     </table>
+
+    <!-- Display pagination links -->
+    <div class="d-flex justify-content-between align-items-center mt-2 mb-2">
+        <div>
+            @if ($users->lastPage() > 1)
+                <div class="pagination">
+                    {{ $users->links('pagination') }}
+                </div>
+            @endif
+        </div>
+        <div>
+            Showing {{ $users->firstItem() }} - {{ $users->lastItem() }} of {{ $users->total() }} results
+        </div>
+    </div>
+
 </div>
 
 @endsection
