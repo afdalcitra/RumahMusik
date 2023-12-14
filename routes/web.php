@@ -121,6 +121,8 @@ Route::group(['middleware' => Admin::class], function () {
 Route::group(['middleware' => User::class], function () {
     
     Route::get('/user/myprofile', [UserController::class, 'myProfilePage'])->name('myProfilePage');
-    Route::get('/user/myreservation', [UserController::class, 'myReservationPage'])->name('myReservationPage');
+    Route::get('/user/myreservation', [UserController::class, 'viewReservationHistory'])->name('viewReservationHistory');
+
+
 
 });

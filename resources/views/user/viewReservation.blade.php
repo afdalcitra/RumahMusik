@@ -2,9 +2,7 @@
 @include('layout.navbar')
 
 @section('content')
-
 <div class="page-container">
-
     <div class="home-title">
         <div class="row">
             <div class="col-lg-12 text-center">
@@ -13,7 +11,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Table -->
     <table class="table mt-4">
         <thead>
@@ -26,27 +24,16 @@
             </tr>
         </thead>
         <tbody>
-            <!-- Add your table rows with data here -->
+            @foreach ($reservations as $reservation)
             <tr>
-                <td>Bass Listrik</td>
-                <td>2023-12-15</td>
-                <td>-</td>
-                <td>Rp150000</td>
-                <td>-</td>
+                <td>{{ $reservation->instrument->name }}</td>
+                <td>{{ $reservation->tanggal_peminjaman }}</td>
+                <td>{{ $reservation->tanggal_dikembalikan ?? '-' }}</td>
+                <td>Rp{{ $reservation->total_price }}</td>
+                <td>{{ $reservation->penalty ?? '-' }}</td>
             </tr>
-            <!-- Add your table rows with data here -->
-            <tr>
-                <td>Drumset</td>
-                <td>2023-12-12</td>
-                <td>2023-12-13</td>
-                <td>Rp150000</td>
-                <td>-</td>
-            </tr>
-            <!-- Repeat this structure for each row -->
-            <!-- Repeat this structure for each row -->
-            
+            @endforeach
         </tbody>
     </table>
-    </div>
 </div>
 @endsection
