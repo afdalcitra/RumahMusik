@@ -7,12 +7,19 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Instrument;
 use App\Models\Reservation;
+use App\Models\Category;
 
 class AdminController extends Controller
 {
     /* MOVE PAGE */
     public function dashboardPage(){
-        return view('admin.dashboard');
+
+        $userCount = User::count();
+        $categoryCount = Category::count();
+        $instrumentCount = Instrument::count();
+        $reservationCount = Reservation::count();
+        
+        return view('admin.dashboard', compact('userCount', 'categoryCount', 'instrumentCount', 'reservationCount'));
     }
 
     /* ADMIN-CATEGORY */
@@ -58,7 +65,5 @@ class AdminController extends Controller
     public function userEditPage(){
         return view('admin.user.userEdit');
     }
-
-
-
+    
 }

@@ -13,6 +13,9 @@ class Reservation extends Model
 
     protected $fillable = ['user_id', 'instrument_id', 'tanggal_peminjaman', 'tanggal_dikembalikan', 'total_price', 'penalty'];
 
+    // Specify the table name
+    protected $table = 'reservation';
+
     public function users(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');

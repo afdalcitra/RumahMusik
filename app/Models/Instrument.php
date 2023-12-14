@@ -15,6 +15,9 @@ class Instrument extends Model
         'code', 'name', 'price', 'image', 'description',
     ];
 
+    // Specify the table name
+    protected $table = 'instrument';
+
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class, 'instrument_category');

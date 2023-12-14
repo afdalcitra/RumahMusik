@@ -12,6 +12,9 @@ class Category extends Model
 
     protected $fillable = ['name'];
 
+    // Specify the table name
+    protected $table = 'category';
+
     public function instrument(): BelongsToMany
     {
         return $this->belongsToMany(Instrument::class, 'instrument_category');
