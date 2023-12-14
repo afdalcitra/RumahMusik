@@ -27,12 +27,27 @@
             </ul>
         </div>
         <div class="navbar-nav"> <!-- Adjust padding as needed -->
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Login</a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#">Profile</a></li>
-                    <li><a class="dropdown-item" href="#">Logout</a></li>   
-                </ul>
+            <li class="nav-item dropdown" style>
+                @auth
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ auth()->user()->username}}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="userDropdown">
+                        @if(auth()->user()->is_admin == 1)
+                            <a class="dropdown-item" href="">Dashboard</a>
+                            <div class="dropdown-divider"></div>
+                        @endif
+                        <a class="dropdown-item" href="">Lihat Profile</a>
+                        <a id="button-logout" class="dropdown-item btn btn-danger" style="border-color: #D4E9F7;" onclick="document.getElementById('logoutForm').submit();">Logout</a>
+                        <form action="{{ route('logout') }}" method="POST" id="logoutForm">
+                        @csrf
+                </form>
+                    </div>
+                @else
+                <a class="nav-link" href="{{ route('loginPage') }}">Login
+                    <span class="sr-only">(current)</span>
+                </a>
+                @endauth
             </li>
         </div>
     </div>

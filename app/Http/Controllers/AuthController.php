@@ -19,11 +19,11 @@ class AuthController extends Controller
         $user = auth() -> user();
 
         if ($user){
-            $role = $user->is_admin;
+            $is_admin = $user->is_admin;
 
-            if ($role == 1) {
+            if ($is_admin == 1) {
                 return redirect('/admin/dashboard');
-            } else if ($role == 0) {
+            } else if ($is_admin == 0) {
                 return redirect('/homepage');
             }
         }
@@ -35,7 +35,7 @@ class AuthController extends Controller
     /* LOGIN HANDLING */
     // Show Login Page
     public function loginPage(){
-        return redirect('/register');
+        return view('auth.login');
     }
 
     //Login Logic
@@ -50,17 +50,44 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
             // Check user's role and redirect accordingly
-            if ($user->role == 0) {
+            if ($user->is_admin == 0) {
                 return redirect('/homepage'); // Pass instruments to homepage view for customers
-            } elseif ($user->role == 1) {
+            } elseif ($user->is_admin == 1) {
                 return redirect('/admin/dashboard'); // Redirect to adminpage for admins
             }
+
+            return redirect('/');
+
         }
         // Authentication failed
         return back()->withErrors(['email' => 'Email atau Password yang anda masukkan salah!']);
     }
 
     /* REGISTER HANDLING */
+    //Show Register Page
+    public function registerPage(){
+        return view('auth.register');
+    }
+
+    //Register Logic
+    public function register(Request $request){
+        // Create and save the user
+        $user = User::create([
+            'username' => $request->input('username'),
+            'email' => $request->input('email'),
+            'password' => bcrypt($request->input('password')),
+        ]);
+
+        // Log in the user
+        Auth::login($user);
+
+        // Redirect to home or dashboard
+        return redirect('/');
+    }
 
     /* LOGOUT HANDLING */
+    public function logout(){
+        Auth::logout();
+        return redirect('/login');
+    }
 }

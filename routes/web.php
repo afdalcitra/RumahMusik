@@ -19,19 +19,21 @@ use App\Http\Controllers\AdminController;
 //Landing Page
 Route::get('/', [AuthController::class, 'landHandling'])->name('landHandling');
 
+//Login-Register Handling
+Route::get('/register', [AuthController::class, 'registerPage'])->name('registerPage');
+Route::post('/register', [AuthController::class, 'register'])->name('register');
+
+
+Route::get('/login', [AuthController::class, 'loginPage'])->name('loginPage');
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+
 //All Side
 Route::get('/homepage', function () {
     return view('user.home');
 });
-
-Route::get('/login', function () {
-    return view('auth.login');
-});
-
-Route::get('/register', function () {
-    return view('auth.register');
-});
-
 
 //User Side
 Route::get('/user/profile', function () {
