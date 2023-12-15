@@ -25,7 +25,7 @@ Rumah Musik is one of the entertainment companies including musical instrument r
 </p>
 
 ## DATABASE SCHEME
-<img src="{{ asset('images/db_scheme.png') }}" alt="Rumah Musik's Database Scheme">
+<img src="public\images\db_scheme.png" alt="Rumah Musik's Database Scheme">
 
 ## DEMO VIDEO
 TO BE ANNOUNCED
