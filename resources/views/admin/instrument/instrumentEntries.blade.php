@@ -47,13 +47,12 @@
                 <tr>
                     <td>{{ $instrument->code }}</td>
                     <td>{{ $instrument->name }}</td>
-                    <td>{{ $instrument->price }}</td>
+                    <td>Rp{{ number_format($instrument->price, 0, ',', '.') }}</td>
                     <td><img class="custom-img-entries" src="{{ asset('images/' . $instrument->image) }}" alt="{{ $instrument->name }}"></td>
                     <td>
                         <div class="flex justify-center flex-wrap w-[100px]">
                             @foreach ($instrument->categories as $item)
-                                <span
-                                    class="bg-blue-100 text-blue-800 text-xs font-medium rounded dark:text-blue-300">| {{ $item->name }}</span>
+                                <span class="btn btn-outline-secondary btn-sm mb-1">{{ $item->name }}</span>
                             @endforeach
                         </div>
                     </td>

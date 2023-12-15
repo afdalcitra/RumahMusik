@@ -7,6 +7,11 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Instrument;
 use App\Models\Reservation;
+use App\Models\Category;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -32,7 +37,7 @@ class AuthController extends Controller
 
     }
 
-    /* LOGIN HANDLING */
+    /* ======================== LOGIN HANDLING ======================== */
     // Show Login Page
     public function loginPage(){
         return view('auth.login');
@@ -91,9 +96,12 @@ class AuthController extends Controller
         return redirect('/login');
     }
 
-    /* HOMEPAGE */
+    /* ======================== HOMEPAGE ======================== */
     public function homePage(){
-        return view('user.home');
+
+        $instruments = Instrument::all();
+
+        return view('user.home', compact('instruments'));
     }
     
 }
