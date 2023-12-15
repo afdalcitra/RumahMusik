@@ -39,6 +39,8 @@
         </div>
         <div class="navbar-nav"> <!-- Adjust padding as needed -->
             <li class="nav-item dropdown" style>
+                @auth
+                @csrf
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {{ auth()->user()->username}}
                 </a>
@@ -46,13 +48,18 @@
                     @if(auth()->user()->is_admin == 1)
                         <a class="dropdown-item" href="{{ route('homePage') }}">Homepage</a>
                         <div class="dropdown-divider"></div>
+                    @elseif(auth()->user()->is_admin == 0)
+                        <a class="dropdown-item" href="{{ route('myProfilePage', ['id' => auth()->user()->id]) }}">Lihat Profile</a>
+                        <div class="dropdown-divider"></div>
                     @endif
-                    <a class="dropdown-item" href="{{ route('myProfilePage') }}">Lihat Profile</a>
                     <a id="button-logout" class="dropdown-item btn btn-danger" style="border-color: #D4E9F7;" onclick="document.getElementById('logoutForm').submit();">Logout</a>
                     <form action="{{ route('logout') }}" method="POST" id="logoutForm">
                         @csrf
                     </form>
                 </div>
+                @else
+                <a class="nav-link" href="{{ route('landHandling') }}">Login</a>
+                @endauth
             </li>
         </div>
     </div>

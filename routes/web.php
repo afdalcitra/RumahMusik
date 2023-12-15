@@ -33,6 +33,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 //All Role Side
 Route::get('/homepage', [AuthController::class, 'homePage'])->name('homePage');
+Route::post('/homepage/search', [AuthController::class, 'homepageSearch'])->name('homepageSearch');
 
 //Admin Side
 Route::group(['middleware' => Admin::class], function () {
@@ -111,9 +112,16 @@ Route::group(['middleware' => Admin::class], function () {
 //User Side
 Route::group(['middleware' => User::class], function () {
     
-    Route::get('/user/myprofile', [UserController::class, 'myProfilePage'])->name('myProfilePage');
+    Route::get('/user/myprofile/{id}', [UserController::class, 'myProfilePage'])->name('myProfilePage');
     Route::get('/user/myreservation', [UserController::class, 'viewReservationHistory'])->name('viewReservationHistory');
 
-
+    //EDIT PROFILE
+    Route::post('/user/myprofile/edit-profile/{id}', [UserController::class, 'updateProfile'])->name('updateProfile');
+    
+    //EDIT SECURITY
+    Route::post('/user/myprofile/edit-security/{id}', [UserController::class, 'updateSecurity'])->name('updateSecurity');
+    
+    //DELETE USER
+    Route::post('/user/myprofile/delete/{id}', [UserController::class, 'deleteUser'])->name('deleteUser');
 
 });

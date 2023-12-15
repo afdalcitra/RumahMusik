@@ -97,11 +97,24 @@ class AuthController extends Controller
     }
 
     /* ======================== HOMEPAGE ======================== */
-    public function homePage(){
+    public function homePage(Request $request){
+
+        $search = $request->input('search');
+    
+        // Use conditional query to fetch instruments based on search input
+        $instruments = $search 
+            ? Instrument::where('name', 'like', '%' . $search . '%')->get()
+            : Instrument::all();
+    
+        return view('user.home', compact('instruments', 'search'));
+    }
+
+    //SEARCH INSTRUMENT IN HOMEPAGE
+    public function homepageSearch(Request $request){
 
         $instruments = Instrument::all();
+        return $this->homePage($request);
 
-        return view('user.home', compact('instruments'));
     }
     
 }

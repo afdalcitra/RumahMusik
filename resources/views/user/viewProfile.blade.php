@@ -12,16 +12,29 @@
                 <div class="card-body">
                     <h3>Profile Information</h3>
                     <p>Update your profile information</p>
-                    <form action="" method="post">
+                    <form id="profileUpdateForm" action="{{ route('updateProfile', ['id' => $user->id]) }}" method="post">
+                        @csrf
+
+                        @if (Session::has('profile_success'))
+                            <div class="alert alert-success" role="alert">
+                                {{ Session::get('profile_success') }}
+                            </div>
+                        @endif
+
+                        @if (Session::has('profile_error'))
+                            <div class="alert alert-danger" role="alert">
+                                {{ Session::get('profile_error') }}
+                            </div>
+                        @endif
 
                         <div class="form-group">
                             <label for="username">Username</label>
-                            <input type="text" name="username" id="username" value="" class="form-control">
+                            <input type="text" name="username" id="username" value="{{ $user->username }}" class="form-control">
                         </div>
 
                         <div class="form-group pt-3">
                             <label for="email">Email</label>
-                            <input type="email" name="email" id="email" value="" class="form-control">
+                            <input type="email" name="email" id="email" value="{{ $user->email }}" class="form-control">
                         </div>
 
                         <div class="form-button pt-3">
@@ -42,7 +55,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <a href="#" class="btn btn-primary">Update</a>
+                                    <a href="#" class="btn btn-primary" onclick="document.getElementById('profileUpdateForm').submit();">Update</a>
                                 </div>
                                 </div>
                             </div>
@@ -58,21 +71,40 @@
                 <div class="card-body">
                     <h3>Security Update</h3>
                     <p>Update your security information</p>
-                    <form action="" method="post">
+                    <form id="profileSecurityForm" action="{{ route('updateSecurity', ['id' => $user->id]) }}" method="post">
+                        @csrf
+
+                        @if (Session::has('security_incorrect'))
+                            <div class="alert alert-danger" role="alert">
+                                {{ Session::get('security_incorrect') }}
+                            </div>
+                        @endif
+
+                        @if (Session::has('security_success'))
+                            <div class="alert alert-success" role="alert">
+                                {{ Session::get('security_success') }}
+                            </div>
+                        @endif
+
+                        @if (Session::has('security_error'))
+                            <div class="alert alert-danger" role="alert">
+                                {{ Session::get('security_error') }}
+                            </div>
+                        @endif
 
                         <div class="form-group">
-                            <label for="password">Current Password</label>
-                            <input type="password" name="password" id="password" value="" class="form-control">
+                            <label for="currPassword">Current Password</label>
+                            <input type="password" name="currPassword" id="currPassword" placeholder="Current Password" value="" class="form-control">
                         </div>
 
                         <div class="form-group pt-3">
                             <label for="newPassword">New Password</label>
-                            <input type="password" name="newPassword" id="newPassword" value="" class="form-control">
+                            <input type="password" name="newPassword" id="newPassword" placeholder="New Password" value="" class="form-control">
                         </div>
 
                         <div class="form-group pt-3">
                             <label for="confirmNewPassword">Confirm New Password</label>
-                            <input type="password" name="confirmNewPassword" id="confirmNewPassword" value="" class="form-control">
+                            <input type="password" name="confirmNewPassword" id="confirmNewPassword" placeholder="Confirm New Password" value="" class="form-control">
                         </div>
 
                         <div class="form-button pt-3">
@@ -93,7 +125,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <a href="#" class="btn btn-primary">Update</a>
+                                                <a href="#" class="btn btn-primary" onclick="document.getElementById('profileSecurityForm').submit();">Update</a>
                                             </div>
                                         </div>
                                     </div>
@@ -109,7 +141,8 @@
                 <div class="card-body">
                     <h3>Delete Account</h3>
                     <p>Warning, once the account is deleted, all of the saved data will be lost!</p>
-                    <form action="" method="post">
+                    <form id="deleteUser" action="{{ route('deleteUser', ['id' => $user->id]) }}" method="post">
+                        @csrf
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
                             Delete Account
                         </button>
@@ -127,7 +160,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            <a href="#" class="btn btn-danger">Delete</a>
+                                            <a href="#" class="btn btn-danger" onclick="document.getElementById('deleteUser').submit();">Delete</a>
                                         </div>
                                     </div>
                                 </div>

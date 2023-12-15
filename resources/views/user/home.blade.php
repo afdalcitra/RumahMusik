@@ -14,8 +14,18 @@
         </div>
     </div>
 
-    <div class="container pt-5">
-        <div class="row justify-content-center">
+    <div class="input-group mt-2">
+        <div class="col-md-12">
+            <form action="{{ route('homepageSearch') }}" method="post" class="d-flex">
+            @csrf
+                <input type="text" name="search" class="form-control form-search" placeholder="Search instrument" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                <button class="btn btn-primary py-2" type="submit" id="search-button">Search</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="container pt-2">
+        <div class="row">
             @foreach ($instruments as $instrument)
                 <div class="col-md-3 mb-3">
                     <form action="" method="post">
@@ -32,9 +42,17 @@
                                         <span class="btn btn-outline-secondary btn-sm mb-1">{{ $item->name }}</span>
                                     @endforeach
                                 </p>
-                                <div class="text-center mt-auto">
-                                    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reservationModal">Order</a>
-                                </div>
+                                @auth
+                                    @if(auth()->user()->is_admin == 0)
+                                    <div class="text-center mt-auto">
+                                        <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reservationModal">Order</a>
+                                    </div>
+                                    @elseif (auth()->user()->is_admin == 1)
+                                    <div class="text-center mt-auto">
+                                        <a href="#" class="btn btn-primary disabled" data-bs-toggle="modal" data-bs-target="#reservationModal">Order</a>
+                                    </div>
+                                @endif
+                                @endauth
                                 <!-- Modal -->
                                 <div class="reservation-modal">
                                     <!-- your modal code remains unchanged -->
@@ -45,6 +63,12 @@
                     </form>
                 </div>
             @endforeach
+
+            @if ($search && $instruments->isEmpty())
+                <div class="col-md-12 mt-3">
+                    <p>No instruments found for '{{ $search }}'</p>
+                </div>
+            @endif
         </div>
     </div>
 </div>
