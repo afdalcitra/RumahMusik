@@ -24,8 +24,9 @@ class AdminController extends Controller
         $categoryCount = Category::count();
         $instrumentCount = Instrument::count();
         $reservationCount = Reservation::count();
+        $reservations = Reservation::all();
         
-        return view('admin.dashboard', compact('userCount', 'categoryCount', 'instrumentCount', 'reservationCount'));
+        return view('admin.dashboard', compact('userCount', 'categoryCount', 'instrumentCount', 'reservationCount', 'reservations'));
     }
 
     /* ======================== ADMIN-CATEGORY ======================== */

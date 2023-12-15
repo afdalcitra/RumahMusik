@@ -102,41 +102,36 @@
 </div>
 
 <div class="entries-container pt-4 mt-4 pb-4 mb-4 text-center">
-    <h1>Rental History</h1>
+    <h1>Reservation History</h1>
     <!-- Table -->
-    <table class="table mt-4">
+    <table class="table mt-5">
         <thead>
             <tr>
                 <th>Username</th>
                 <th>Instrument</th>
-                <th>Rented at</th>
-                <th>Returned at</th>
-                <th>Price</th>
+                <th>Tanggal Peminjaman</th>
+                <th>Tanggal Dikembalikan</th>
+                <th>Total Price</th>
                 <th>Penalty</th>
             </tr>
         </thead>
         <tbody>
-            <!-- Add your table rows with data here -->
-            <tr>
-                <td>John Doe</td>
-                <td>Bass Listrik</td>
-                <td>2023-12-15</td>
-                <td>-</td>
-                <td>Rp150000</td>
-                <td>-</td>
-            </tr>
-            <!-- Add your table rows with data here -->
-            <tr>
-                <td>Mary Doe</td>
-                <td>Drumset</td>
-                <td>2023-12-12</td>
-                <td>2023-12-13</td>
-                <td>Rp150000</td>
-                <td>-</td>
-            </tr>
-            <!-- Repeat this structure for each row -->
-            <!-- Repeat this structure for each row -->
-            
+            @foreach ($reservations as $reservation)
+                <tr>
+                    <td>{{ $reservation->users->username }}</td>
+                    <td>{{ $reservation->instrument->name }}</td>
+                    <td>{{ $reservation->tanggal_peminjaman }}</td>
+                    <td>{{ $reservation->tanggal_dikembalikan ?? '-' }}</td>
+                    <td>{{ $reservation->total_price ?? '-' }}</td>
+                    <td>
+                        @if ($reservation->penalty)
+                            {{ $reservation->penalty }}
+                        @else
+                            -
+                        @endif
+                    </td>
+                </tr>
+            @endforeach
         </tbody>
     </table>
 </div>
