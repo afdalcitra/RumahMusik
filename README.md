@@ -28,4 +28,5 @@ Rumah Musik is one of the entertainment companies including musical instrument r
 <img src="public\images\db_scheme.png" alt="Rumah Musik's Database Scheme">
 
 ## DEMO VIDEO
-TO BE ANNOUNCED
+
+<a href="https://drive.google.com/drive/folders/1oTaofYx-z_5Cc8tBrm6OcxWkyJl7mE3j?usp=sharing" alt="Demo Video Rumah Musik" class="btn btn-primary">Demo Video Rumah Musik</a>
