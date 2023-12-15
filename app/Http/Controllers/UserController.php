@@ -36,7 +36,7 @@ class UserController extends Controller
         return view('user.viewReservation', compact('reservations'));
     }
 
-    /* ======================== FUNCTION LOGIC ======================== */
+    /* ======================== USER MANAGEMENT ======================== */
 
     //UPDATE USERNAME & EMAIL
 
@@ -123,6 +123,52 @@ class UserController extends Controller
             Session::flash('delete_error', 'Error deleting user');
         }
     
+        return redirect()->route('homePage');
+    }
+
+    /* ======================== USER RESERVATION ======================== */
+
+    //CREATE RESERVATION
+    public function createReservation(Request $request, $instrumentId)
+    {
+        // Validate form data
+        $request->validate([
+            'datepicker' => 'required|date',
+        ]);
+
+        try {
+
+            // Find the instrument by ID
+            $instrument = Instrument::findOrFail($instrumentId);
+
+            // Calculate total price based on instrument price
+            $totalPrice = $instrument->price;
+
+            // Logic max 2 rent
+            $rentChance = Reservation::where('user_id', auth()->user()->id)
+                ->whereNull('tanggal_dikembalikan')
+                ->count();
+
+            if ($rentChance >= 2) {
+                Session::flash('rent_max', 'Your rental capacity is at max! please return the unit first!');
+                return redirect()->route('homePage')->with('danger', 'Anda sudah mencapai batas maksimal peminjaman senjata.');
+            }
+
+            // Create reservation
+            Reservation::create([
+                'user_id' => auth()->user()->id,
+                'instrument_id' => $instrument->id, // Use the instrument ID obtained from the route parameter
+                'tanggal_peminjaman' => Carbon::parse($request->input('datepicker')),
+                'total_price' => $totalPrice,
+            ]);
+
+            // Flash a success message to the session
+            Session::flash('reservation_success', 'Reservation created successfully');
+        } catch (\Exception $e) {
+            // If an exception occurs during reservation creation, flash an error message
+            Session::flash('reservation_error', 'Error creating reservation');
+        }
+
         return redirect()->route('homePage');
     }
 

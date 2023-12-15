@@ -124,4 +124,7 @@ Route::group(['middleware' => User::class], function () {
     //DELETE USER
     Route::post('/user/myprofile/delete/{id}', [UserController::class, 'deleteUser'])->name('deleteUser');
 
+    //NEW RESERVATION
+    Route::post('/user/reservation/create/{instrumentId}', [UserController::class, 'createReservation'])->name('createReservation');
+
 });
