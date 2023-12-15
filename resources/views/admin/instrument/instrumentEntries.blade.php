@@ -49,7 +49,14 @@
                     <td>{{ $instrument->name }}</td>
                     <td>{{ $instrument->price }}</td>
                     <td><img class="custom-img-entries" src="{{ asset('images/' . $instrument->image) }}" alt="{{ $instrument->name }}"></td>
-                    <td>Category 1</td>
+                    <td>
+                        <div class="flex justify-center flex-wrap w-[100px]">
+                            @foreach ($instrument->categories as $item)
+                                <span
+                                    class="bg-blue-100 text-blue-800 text-xs font-medium rounded dark:text-blue-300">| {{ $item->name }}</span>
+                            @endforeach
+                        </div>
+                    </td>
                     <td>{{ $instrument->description }}</td>
                     <td class="text-end">
                         <!-- Add action buttons here -->

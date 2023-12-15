@@ -26,12 +26,26 @@
                             <input class="form-control" type="file" id="formFile" name="images">
                         </div>
                         
-                        <label for="category-select" class="">Category</label>
-                        <select class="form-select py-2 mb-3" aria-label="Default select example">
-                            <option selected value="1">Category 1</option>
-                            <option value="2">Category 2</option>
-                            <option value="3">Category 3</option>
-                        </select>
+                        <div>
+                            <label for="name" class="block mb-2 text-sm font-semibold">Categories</label>
+                            <ul
+                                class="w-48 text-sm font-medium text-gray-900 bg-white dark:text-white">
+                                @foreach ($categories as $category)
+                                    <li class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
+                                        <div class="flex items-center">
+                                            <input id="vue-checkbox" type="checkbox"
+                                                {{ in_array($category->id, $instrument->categories->pluck('id')->toArray()) ? 'checked' : '' }}
+                                                value="{{ $category->id }}"
+                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                                                name="category[]">
+                                            <label for="vue-checkbox"
+                                                class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ $category->name }}</label>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            </ul>
+
+                        </div>
 
                         <div class="py-2 mb-3">
                             <label for="exampleFormControlTextarea1" class="form-label">Description</label>

@@ -135,22 +135,29 @@ class AdminController extends Controller
 
         $search = $request->input('search');
         $instruments = Instrument::where('name', 'like', '%' . $search . '%')->paginate(10);
+        
 
         return view('admin.instrument.instrumentEntries', compact('instruments'));
         
     }
 
     public function instrumentCreatePage(){
-        return view('admin.instrument.instrumentCreate');
+
+        $categories = Category::all();
+
+        return view('admin.instrument.instrumentCreate', compact('categories'));
     }
 
     public function instrumentEditPage($id){
+
+        //Category
+        $categories = Category::all();
 
         // Find the category by ID
         $instrument = Instrument::find($id);
     
         // Pass the category data to the view
-        return view('admin.instrument.instrumentEdit', compact('instrument'));
+        return view('admin.instrument.instrumentEdit', compact('instrument', 'categories'));
 
     }
 
@@ -193,6 +200,9 @@ class AdminController extends Controller
                 // Log success message
                 Log::info('Instrument image uploaded successfully. Filename: ' . $fileName);
             }
+
+            $categories = $request->input('category');
+            $instrument->categories()->attach($categories);
         
             Session::flash('success', 'Instrument created successfully');
         } catch (\Exception $e) {
@@ -254,10 +264,14 @@ class AdminController extends Controller
                         unlink($existingImagePath);
                     }
                 }
+                
 
                 // Update the instrument with the new file name
                 $instrument->image = $fileName;
             }
+
+            $categories = $request->input('category');
+            $instrument->categories()->sync($categories);
 
             $instrument->save();
 
@@ -271,9 +285,10 @@ class AdminController extends Controller
 
 
     //DELETE INSTRUMENT
-    public function instrumentDelete($id){
+    public function instrumentDelete($id, Instrument $instrument){
 
         try{
+            $instrument->categories()->detach();
             Instrument::destroy($id);
             Session::flash('success', 'Instrument deleted successfully');
         } catch (\Exception $e) {

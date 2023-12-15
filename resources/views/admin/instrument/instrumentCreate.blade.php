@@ -27,25 +27,21 @@
                         </div>
                         
                         <div class="category-select-container">
-                            <label for="category-select" class="">Category</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="Category 1" id="category1" name="categories[]">
-                                <label class="form-check-label" for="category1">
-                                    Category 1
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="Category 2" id="category2" name="categories[]">
-                                <label class="form-check-label" for="category2">
-                                    Category 2
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="Category 3" id="category3" name="categories[]">
-                                <label class="form-check-label" for="category3">
-                                    Category 3
-                                </label>
-                            </div>
+                        <label for="name" class="block text-sm font-semibold border-0">Categories</label>
+                            <ul
+                                class="w-48 text-sm font-medium text-gray-900 bg-white dark:text-white">
+                                @foreach ($categories as $category)
+                                    <li class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
+                                        <div class="flex items-center">
+                                            <input id="vue-checkbox" type="checkbox" value="{{ $category->id }}"
+                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                                                name="category[]">
+                                            <label for="vue-checkbox"
+                                                class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ $category->name }}</label>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            </ul>
                         </div>
 
                         <div class="py-2 mb-3">
@@ -66,7 +62,7 @@
     </div>
 </div>
 
-<script>
+<!-- <script>
     function validateForm() {
         // Get all checkboxes with the name "categories[]"
         var checkboxes = document.querySelectorAll('input[name="categories[]"]');
@@ -85,6 +81,6 @@
         // Continue with form submission if at least one checkbox is checked
         return true;
     }
-</script>
+</script> -->
 
 @endsection

@@ -31,15 +31,6 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-//User Side
-Route::get('/user/profile', function () {
-    return view('user.viewProfile');
-});
-
-Route::get('/user/reservation', function () {
-    return view('user.viewReservation');
-});
-
 //All Role Side
 Route::get('/homepage', [AuthController::class, 'homePage'])->name('homePage');
 
@@ -106,7 +97,7 @@ Route::group(['middleware' => Admin::class], function () {
 
     /* ======================== ADMIN-RESERVATION ======================== */
     Route::get('/admin/peminjaman/reservation-entries', [AdminController::class, 'reservationPage'])->name('reservationPage');
-    Route::get('/admin/reservation', [AdminControllerNew::class, 'reservationPage'])->name('admin.reservation');
+    Route::get('/admin/reservation', [AdminController::class, 'reservationPage'])->name('admin.reservation');
     Route::post('/admin/return-instrument/{id}', [AdminController::class, 'returnInstrument'])->name('admin.returnInstrument');
     Route::delete('/admin/delete-reservation/{id}', [AdminController::class, 'deleteReservation'])->name('deleteReservation');
     Route::post('/admin/reservations/search', [AdminController::class, 'searchReservations'])->name('searchReservations');
