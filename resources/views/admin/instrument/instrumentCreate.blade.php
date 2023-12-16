@@ -23,7 +23,7 @@
 
                         <div class="py-2 mb-3">
                             <label for="formFile" class="form-label">Images</label>
-                            <input class="form-control" type="file" id="formFile" name="images" required>
+                            <input class="form-control" type="file" id="formFile" name="images" accept=".jpg, .jpeg, .webp, .png, .svg, .gif" required>
                         </div>
                         
                         <div class="category-select-container">
