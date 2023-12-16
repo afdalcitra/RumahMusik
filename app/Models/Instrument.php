@@ -12,7 +12,7 @@ class Instrument extends Model
     use HasFactory;
     
     protected $fillable = [
-        'code', 'name', 'price', 'image', 'description',
+        'code', 'name', 'price', 'image', 'stock', 'description',
     ];
 
     // Specify the table name

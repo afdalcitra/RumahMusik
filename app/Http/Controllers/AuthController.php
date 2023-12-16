@@ -74,8 +74,26 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
-    //Register Logic
-    public function register(Request $request){
+    // Register Logic
+    public function register(Request $request)
+    {
+        // Validate user input
+        $request->validate([
+            'username' => 'required|unique:users',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:8',
+        ]);
+
+        // Check if the user already exists
+        $existingUser = User::where('username', $request->input('username'))
+                            ->orWhere('email', $request->input('email'))
+                            ->first();
+
+        if ($existingUser) {
+            // User already exists, return an error message
+            return back()->withErrors(['username' => 'Username or email is already taken.']);
+        }
+
         // Create and save the user
         $user = User::create([
             'username' => $request->input('username'),

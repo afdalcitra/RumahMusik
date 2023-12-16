@@ -31,7 +31,10 @@
                             <a class="nav-link" aria-current="page" href="{{ route('homePage') }}">Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('viewReservationHistory') }}">My Reservation</a>
+                            <a class="nav-link" href="{{ route('viewReservation') }}">My Reservation</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('viewHistory') }}">History</a>
                         </li>
                     @endif
                 @endauth

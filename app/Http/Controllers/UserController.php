@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
+use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
 
 
 class UserController extends Controller
@@ -27,13 +28,22 @@ class UserController extends Controller
         return view('user.viewReservation');
     }
 
-    public function viewReservationHistory()
+    public function viewReservation()
     {
         // Ambil data histori reservasi pengguna
         $user = auth()->user();
         $reservations = Reservation::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
     
         return view('user.viewReservation', compact('reservations'));
+    }
+
+    public function viewHistory()
+    {
+        // Ambil data histori reservasi pengguna
+        $user = auth()->user();
+        $reservations = Reservation::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+    
+        return view('user.viewHistory', compact('reservations'));
     }
 
     /* ======================== USER MANAGEMENT ======================== */
@@ -133,8 +143,18 @@ class UserController extends Controller
     {
         // Validate form data
         $request->validate([
-            'datepicker' => 'required|date',
+            'datepickerstart' => 'required|date',
+            'datepickerend' => 'required|date',
         ]);
+
+        // Check if the instrument is available (stock > 0)
+        $instrument = Instrument::findOrFail($instrumentId);
+
+        if ($instrument-> stock <= 0) {
+            // Return an alert or redirect with an error message indicating that the instrument is out of stock
+            Session::flash('empty_stock', 'Instrument is out of stock.');
+            return redirect()->route('homePage');
+        }
 
         try {
 
@@ -155,21 +175,96 @@ class UserController extends Controller
             }
 
             // Create reservation
+            
             Reservation::create([
                 'user_id' => auth()->user()->id,
                 'instrument_id' => $instrument->id, // Use the instrument ID obtained from the route parameter
-                'tanggal_peminjaman' => Carbon::parse($request->input('datepicker')),
+                'tanggal_peminjaman' => Carbon::parse($request->input('datepickerstart')),
+                'akhir_peminjaman' => Carbon::parse($request->input('datepickerend')),
                 'total_price' => $totalPrice,
             ]);
 
+            $instrument->stock -= 1;
+            $instrument->save();
+
+            
             // Flash a success message to the session
             Session::flash('reservation_success', 'Reservation created successfully');
         } catch (\Exception $e) {
             // If an exception occurs during reservation creation, flash an error message
             Session::flash('reservation_error', 'Error creating reservation');
+            Log::error('Error creating reservation: ' . $e->getMessage());
         }
-
         return redirect()->route('homePage');
+    }
+
+    public function editReservation(Request $request, $reservationId)
+    {
+        // Validate form data
+        $request->validate([
+            'datepickerstart' => 'required|date',
+            'datepickerend' => 'required|date',
+        ]);
+
+        try {
+
+            // Find the reservation by ID
+            $reservation = Reservation::find($reservationId);
+
+            // Update reservation
+            $reservation->tanggal_peminjaman = $request->input('datepickerstart');
+            $reservation->akhir_peminjaman = $request->input('datepickerend');
+
+            $reservation->save();
+
+            // Flash a success message to the session
+            Session::flash('reservation_update_success', 'Reservation successfully edited');
+        } catch (\Exception $e) {
+            // If an exception occurs during reservation creation, flash an error message
+            Session::flash('reservation_update_error', 'Error editing reservation');
+            Log::error('Error creating reservation: ' . $e->getMessage());
+        }
+        return redirect()->route('viewReservation');
+    }
+
+    public function cancelReservation($reservationIdid)
+    {
+
+        try {
+            // Cari reservasi berdasarkan ID
+            $reservation = Reservation::find($reservationIdid);
+        
+            // Periksa apakah reservasi ditemukan
+            if (!$reservation) {
+                return redirect()->back()->with('error', 'Reservasi tidak ditemukan');
+            }
+
+            // Retrieve the corresponding instrument
+            $instrument = $reservation->instrument;
+
+            // Increase the stock of the instrument by 1
+            $instrument->stock += 1;
+            $instrument->save();
+        
+            // Hapus reservasi
+            $reservation->delete();
+            Session::flash('reservation_cancel_success', 'Reservation successfully canceled');
+        } catch (\Exception $e){
+            Session::flash('reservation_cancel_success', 'Cancelling reservation failed');
+        }
+    
+        return redirect()->route('viewReservation');
+    }
+
+    //PRINT RESERVATION
+    public function generatePDF()
+    {
+        $user = auth()->user();
+        $reservations = Reservation::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+
+        $pdf = PDF::loadView('user.pdf.history', compact('reservations'));
+
+        return $pdf->download('reservation_history.pdf');
     }
 
 }

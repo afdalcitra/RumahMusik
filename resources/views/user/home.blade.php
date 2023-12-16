@@ -36,6 +36,10 @@
         <div class="alert alert-danger">
             {{ session('rent_max') }}
         </div>
+    @elseif(session('empty_stock'))
+    <div class="alert alert-danger">
+        {{ session('empty_stock') }}
+    </div>
     @endif
 
     <div class="container pt-2">
@@ -50,6 +54,14 @@
                             <div class="card-body d-flex flex-column">
                                 <h4 class="card-title">{{ $instrument->name }}</h4>
                                 <p class="card-text">Rp{{ number_format($instrument->price, 0, ',', '.') }}</p>
+                                <p class="card-text">
+                                    @if($instrument->stock > 0)
+                                        <p style="color:green">Stock: {{ $instrument->stock }}</p>
+                                    @else
+                                        <p style="color:red">Stock: {{ $instrument->stock }}</p>
+                                    @endif
+                                </p>
+
                                 <p class="card-text">{{ $instrument->description }}</p>
                                 <p class="card-text">
                                     @foreach ($instrument->categories as $item)
@@ -57,7 +69,7 @@
                                     @endforeach
                                 </p>
                                 @auth
-                                    @if(auth()->user()->is_admin == 0)
+                                    @if(auth()->user()->is_admin == 0 && $instrument->stock > 0)
                                     <div class="text-center mt-auto">
                                         <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reservationModal_{{ $instrument->id }}">Order</a>
                                     </div>
@@ -78,8 +90,12 @@
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <label for="datepicker">Select Date:</label>
-                                            <input class="form-control" type="date" name="datepicker" id="datepicker" required>
+                                            <label for="datepickerstart">Starting at:</label>
+                                            <input class="form-control" type="date" name="datepickerstart" id="datepickerstart" required>
+                                        </div>
+                                        <div class="modal-body">
+                                            <label for="datepickerend">Until:</label>
+                                            <input class="form-control" type="date" name="datepickerend" id="datepickerend" required>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

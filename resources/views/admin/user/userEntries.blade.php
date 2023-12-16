@@ -49,7 +49,7 @@
                     <td class="text-end">
                         <!-- Add action buttons here -->
                         <a class="btn btn-primary" href="{{ route('userEditPage', ['id' => $user->id]) }}">Edit</a>
-                        <a class="btn btn-danger" href="{{ route('userDelete', ['id' => $user->id]) }}">Delete</a>
+                        <a class="btn btn-danger" href="javascript:void(0);" data-delete-url="{{ route('userDelete', ['id' => $user->id]) }}" onclick="confirmDelete(this)">Delete</a>
                     </td>
                     <td class="text-end">
                         @if (!$user->is_admin)
@@ -78,5 +78,15 @@
     </div>
 
 </div>
+
+<script>
+    function confirmDelete(button) {
+        var deleteUrl = button.getAttribute('data-delete-url');
+        if (confirm("Are you sure you want to delete this user?")) {
+            // If the user clicks "OK" in the confirmation alert, redirect to the delete URL
+            window.location.href = deleteUrl;
+        }
+    }
+</script>
 
 @endsection

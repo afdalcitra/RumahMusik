@@ -169,6 +169,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\TelescopeServiceProvider::class,
+        Barryvdh\Snappy\ServiceProvider::class,
+
     ])->toArray(),
 
     /*
@@ -184,6 +186,9 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
+        'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
+        'SnappyPDF' => Barryvdh\Snappy\Facades\SnappyPDF::class,
+
     ])->toArray(),
 
 ];

@@ -24,7 +24,7 @@ class AdminController extends Controller
         $categoryCount = Category::count();
         $instrumentCount = Instrument::count();
         $reservationCount = Reservation::count();
-        $reservations = Reservation::all();
+        $reservations = Reservation::paginate(10);
         
         return view('admin.dashboard', compact('userCount', 'categoryCount', 'instrumentCount', 'reservationCount', 'reservations'));
     }
@@ -171,6 +171,7 @@ class AdminController extends Controller
             'name' => 'required',
             'price' => 'required',
             'images' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // add validation for image files
+            'stock' => 'required',
             'description' => 'required',
         ]);
 
@@ -180,6 +181,7 @@ class AdminController extends Controller
                 'code' => $request->input('code'),
                 'name' => $request->input('name'),
                 'price' => $request->input('price'),
+                'stock' => $request->input('stock'),
                 'description' => $request->input('description'),
             ]);
         
@@ -211,7 +213,7 @@ class AdminController extends Controller
             Log::error('Error creating instrument: ' . $e->getMessage());
         
             // Flash a generic error message
-            Session::flash('error', 'Error creating instrument. Please check the logs for more details.');
+            Session::flash('error', 'Error creating instrument. The instrument code cannot be same!');
         }
 
         return redirect()->route('instrumentPage');
@@ -234,6 +236,7 @@ class AdminController extends Controller
             'name' => 'required',
             'price' => 'required',
             'images' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // add validation for image files
+            'stock' => 'required',
             'description' => 'required',
         ]);
 
@@ -245,6 +248,7 @@ class AdminController extends Controller
             $instrument->code = $request->input('code');
             $instrument->name = $request->input('name');
             $instrument->price = $request->input('price');
+            $instrument->stock = $request->input('stock');
             $instrument->description = $request->input('description');
 
             // Check if a new file was uploaded
@@ -302,12 +306,12 @@ class AdminController extends Controller
 
     /* ======================== ADMIN-RESERVATION ======================== */
     public function reservationPage(){
-        $reservations = Reservation::all(); // Ambil semua data reservasi
+        $reservations = Reservation::paginate(10); // Ambil semua data reservasi
         foreach ($reservations as $reservation) {
             if (!$reservation->tanggal_dikembalikan) {
-                $tanggalPeminjaman = Carbon::parse($reservation->tanggal_peminjaman);
+                $tanggalRetur = Carbon::parse($reservation->akhir_peminjaman);
                 $hariIni = Carbon::now();
-                $selisihHari = $hariIni->diffInDays($tanggalPeminjaman, false);
+                $selisihHari = $hariIni->diffInDays($tanggalRetur, false);
     
                 // Jika selisih hari lebih dari 5, tambahkan pesan "Terlambat"
                 if ($selisihHari > 5) {
@@ -328,19 +332,24 @@ class AdminController extends Controller
         }
     
         // Hitung selisih hari
-        $tanggalPeminjaman = Carbon::parse($reservation->tanggal_peminjaman);
+        $tanggalRetur = Carbon::parse($reservation->akhir_peminjaman);
         $tanggalDikembalikan = Carbon::now();
-        $selisihHari = $tanggalDikembalikan->diffInDays($tanggalPeminjaman);
+        $selisihHari = $tanggalRetur->diffInDays($tanggalDikembalikan);
     
         // Periksa jika peminjaman terlambat (lebih dari 5 hari)
-        if ($selisihHari > 5) {
+        if ($selisihHari >= 0) {
             // Hitung biaya penalty (misalnya, biaya 10.000 per hari)
             $biayaPenaltyPerHari = 10000;
-            $biayaPenalty = ($selisihHari - 5) * $biayaPenaltyPerHari;
-            $reservation->penalty = 'Terlambat ' . ($selisihHari - 5) . ' hari. Biaya Penalty: Rp ' . number_format($biayaPenalty, 0, ',', '.');
+            $biayaPenalty = $selisihHari * $biayaPenaltyPerHari;
+            $reservation->penalty = 'Terlambat ' . ($selisihHari) . ' hari. Biaya Penalty: Rp ' . number_format($biayaPenalty, 0, ',', '.');
         } else {
             $reservation->penalty = null;
         }
+
+        // Increase the instrument stock
+        $instrument = $reservation->instrument;
+        $instrument->stock += 1;
+        $instrument->save();
     
         // Tandai sebagai dikembalikan dengan tanggal saat ini
         $reservation->tanggal_dikembalikan = $tanggalDikembalikan;

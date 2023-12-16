@@ -10,10 +10,35 @@
                     <form action="{{ route('register') }}" method="POST" onsubmit="return validateForm()">
                         @csrf
                         <img src="{{ asset('images/logo.png') }}" alt="Rumah Musik Logo" width="100" height="100">
+
+                        <!-- Display validation error for username -->
+                        @error('username')
+                            <div class="alert alert-danger mt-2">{{ $message }}</div>
+                        @enderror
+                        @error('email')
+                            <div class="alert alert-danger mt-2">{{ $message }}</div>
+                        @enderror
+                        @error('password')
+                            <div class="alert alert-danger mt-2">{{ $message }}</div>
+                        @enderror
+                        @error('confPassword')
+                            <div class="alert alert-danger mt-2">{{ $message }}</div>
+                        @enderror
+
                         <input type="text" name="username" id="username" class="form-control my-4 py-2" placeholder="Username" required>
+
+                        <!-- Display validation error for email -->
+
                         <input type="email" name="email" id="email" class="form-control my-4 py-2" placeholder="Email" required>
+
+                        <!-- Display validation error for password -->
+
                         <input type="password" name="password" id="password" class="form-control my-4 py-2" placeholder="Password" minlength="8" required>
-                        <input type="password" name="confPasword" id="confPassword" class="form-control my-4 py-2" placeholder="Confirm Password" minlength="8" required>
+
+                        <!-- Display validation error for confirm password -->
+
+                        <input type="password" name="confPassword" id="confPassword" class="form-control my-4 py-2" placeholder="Confirm Password" minlength="8" required>
+
                         <div class="text-center mt-3">
                             <button class="btn btn-primary">
                                 Register

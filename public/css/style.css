@@ -1,6 +1,6 @@
 .card .custom-card-img {
     height: 300px; /* Maintain the aspect ratio of the original image */
-    object-fit: scale-down;
+    object-fit: cover;
 }
 
 .entries-container{
@@ -35,4 +35,14 @@
 
 .pagination .page-item {
     margin: 0 5px;
+}
+
+.reservation-container{
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.paginate-container ul.pagination li:first-child,
+.paginate-container ul.pagination li:last-child {
+    display: none;
 }

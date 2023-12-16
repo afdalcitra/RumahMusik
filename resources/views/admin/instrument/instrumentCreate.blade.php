@@ -25,6 +25,9 @@
                             <label for="formFile" class="form-label">Images</label>
                             <input class="form-control" type="file" id="formFile" name="images" accept=".jpg, .jpeg, .webp, .png, .svg, .gif" required>
                         </div>
+
+                        <label for="stock" class="">Stock</label>
+                        <input type="number" name="stock" id="stock" class="form-control py-2 mb-3" placeholder="Instrument stock" required>
                         
                         <div class="category-select-container">
                         <label for="name" class="block text-sm font-semibold border-0">Categories</label>

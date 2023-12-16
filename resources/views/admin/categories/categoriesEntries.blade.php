@@ -44,7 +44,7 @@
                     <td class="text-end">
                         <!-- Add action buttons here -->
                         <a class="btn btn-primary" href="{{ route('categoryEditPage', ['id' => $category->id]) }}">Edit</a>
-                        <a class="btn btn-danger" href="{{ route('categoryDelete', ['id' => $category->id]) }}">Delete</a>
+                        <a class="btn btn-danger" href="javascript:void(0);" data-delete-url="{{ route('categoryDelete', ['id' => $category->id]) }}" onclick="confirmDelete(this)">Delete</a>
                     </td>
                 </tr>
             @endforeach
@@ -66,5 +66,15 @@
     </div>
 
 </div>
+
+<script>
+    function confirmDelete(button) {
+        var deleteUrl = button.getAttribute('data-delete-url');
+        if (confirm("Are you sure you want to delete this category?")) {
+            // If the user clicks "OK" in the confirmation alert, redirect to the delete URL
+            window.location.href = deleteUrl;
+        }
+    }
+</script>
 
 @endsection

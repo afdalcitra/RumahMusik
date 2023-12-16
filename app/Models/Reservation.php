@@ -11,7 +11,7 @@ class Reservation extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'instrument_id', 'tanggal_peminjaman', 'tanggal_dikembalikan', 'total_price', 'penalty'];
+    protected $fillable = ['user_id', 'instrument_id', 'tanggal_peminjaman', 'akhir_peminjaman', 'tanggal_dikembalikan', 'total_price', 'penalty'];
 
     // Specify the table name
     protected $table = 'reservation';

@@ -25,6 +25,9 @@
                             <label for="formFile" class="form-label">Images</label>
                             <input class="form-control" type="file" id="formFile" name="images">
                         </div>
+
+                        <label for="stock" class="">Stock</label>
+                        <input type="number" name="stock" id="stock" class="form-control py-2 mb-3" placeholder="Instrument stock" value="{{ $instrument->stock }}" required>
                         
                         <div>
                             <label for="name" class="block mb-2 text-sm font-semibold">Categories</label>

@@ -38,6 +38,7 @@
                 <th>Price</th>
                 <th>Image</th>
                 <th>Category</th>
+                <th>Stock</th>
                 <th>Description</th>
                 <th class="text-end">Action</th>
             </tr>
@@ -56,11 +57,12 @@
                             @endforeach
                         </div>
                     </td>
+                    <td>{{ $instrument->stock }}</td>
                     <td>{{ $instrument->description }}</td>
                     <td class="text-end">
                         <!-- Add action buttons here -->
                         <a class="btn btn-primary" href="{{ route('instrumentEditPage', $instrument->id) }}">Edit</a>
-                        <a class="btn btn-danger" href="{{ route('instrumentDelete', $instrument->id) }}">Delete</a>
+                        <a class="btn btn-danger" href="javascript:void(0);" data-delete-url="{{ route('instrumentDelete', $instrument->id) }}" onclick="confirmDelete(this)">Delete</a>
                     </td>
                 </tr>
             @endforeach
@@ -68,5 +70,15 @@
         </tbody>
     </table>
 </div>
+
+<script>
+    function confirmDelete(button) {
+        var deleteUrl = button.getAttribute('data-delete-url');
+        if (confirm("Are you sure you want to delete this isntrument?")) {
+            // If the user clicks "OK" in the confirmation alert, redirect to the delete URL
+            window.location.href = deleteUrl;
+        }
+    }
+</script>
 
 @endsection

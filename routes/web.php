@@ -102,10 +102,10 @@ Route::group(['middleware' => Admin::class], function () {
     Route::post('/admin/return-instrument/{id}', [AdminController::class, 'returnInstrument'])->name('admin.returnInstrument');
     Route::delete('/admin/delete-reservation/{id}', [AdminController::class, 'deleteReservation'])->name('deleteReservation');
     Route::post('/admin/reservations/search', [AdminController::class, 'searchReservations'])->name('searchReservations');
-
-
-
-
+    
+    
+    
+    
     
 });
 
@@ -113,8 +113,9 @@ Route::group(['middleware' => Admin::class], function () {
 Route::group(['middleware' => User::class], function () {
     
     Route::get('/user/myprofile/{id}', [UserController::class, 'myProfilePage'])->name('myProfilePage');
-    Route::get('/user/myreservation', [UserController::class, 'viewReservationHistory'])->name('viewReservationHistory');
-
+    Route::get('/user/myreservation', [UserController::class, 'viewReservation'])->name('viewReservation');
+    Route::get('/user/myhistory', [UserController::class, 'viewHistory'])->name('viewHistory');
+    
     //EDIT PROFILE
     Route::post('/user/myprofile/edit-profile/{id}', [UserController::class, 'updateProfile'])->name('updateProfile');
     
@@ -123,8 +124,17 @@ Route::group(['middleware' => User::class], function () {
     
     //DELETE USER
     Route::post('/user/myprofile/delete/{id}', [UserController::class, 'deleteUser'])->name('deleteUser');
-
+    
     //NEW RESERVATION
     Route::post('/user/reservation/create/{instrumentId}', [UserController::class, 'createReservation'])->name('createReservation');
+    
+    //EDIT RESERVATION
+    Route::post('/user/reservation/edit/{reservationId}', [UserController::class, 'editReservation'])->name('editReservation');
 
+    //DELETE RESERVATION
+    Route::delete('/admin/cancel-reservation/{reservationId}', [UserController::class, 'cancelReservation'])->name('cancelReservation');
+
+    //PRINT PDF
+    Route::get('/generate-pdf', [UserController::class, 'generatePDF'])->name('generatePDF');
+    
 });

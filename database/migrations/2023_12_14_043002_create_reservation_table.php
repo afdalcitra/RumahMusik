@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->references('id')->on('users')->onDelete('restrict');
             $table->foreignId('instrument_id')->constrained()->references('id')->on('instrument')->onDelete('restrict');
             $table->date('tanggal_peminjaman');
+            $table->date('akhir_peminjaman');
             $table->date('tanggal_dikembalikan')->nullable();
             $table->integer('total_price')->nullable();
             $table->string('penalty')->nullable();

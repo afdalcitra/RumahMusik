@@ -103,26 +103,46 @@
 
 <div class="entries-container pt-4 mt-4 pb-4 mb-4 text-center">
     <h1>Reservation History</h1>
-    <!-- Table -->
-    <table class="table mt-5">
+    <table class="table mt-4">
         <thead>
             <tr>
                 <th>Username</th>
                 <th>Instrument</th>
-                <th>Tanggal Peminjaman</th>
-                <th>Tanggal Dikembalikan</th>
-                <th>Total Price</th>
+                <th>Rented at</th>
+                <th>Until</th>
+                <th>Total Hari</th>
+                <th>Returned at</th>
+                <th>Price</th>
                 <th>Penalty</th>
             </tr>
         </thead>
         <tbody>
+            @php
+                $totalPrice = 0;
+            @endphp
             @foreach ($reservations as $reservation)
                 <tr>
                     <td>{{ $reservation->users->username }}</td>
                     <td>{{ $reservation->instrument->name }}</td>
                     <td>{{ $reservation->tanggal_peminjaman }}</td>
+                    <td>{{ $reservation->akhir_peminjaman }}</td>
+                    @php
+                        // Calculate the date gap
+                        $rentStartDate = Carbon\Carbon::parse($reservation->tanggal_peminjaman);
+                        $rentEndDate = Carbon\Carbon::parse($reservation->akhir_peminjaman);
+                        $dateGap = $rentStartDate->diffInDays($rentEndDate);
+                        
+                        // Calculate the total price based on the date gap and instrument price
+                        $rentPrice = $dateGap * $reservation->instrument->price;
+                        
+                        // Add the calculated price to the overall totalPrice variable
+                        $totalPrice += $rentPrice;
+                    @endphp
+                    <td>{{ $dateGap }}</td>
                     <td>{{ $reservation->tanggal_dikembalikan ?? '-' }}</td>
-                    <td>{{ $reservation->total_price ?? '-' }}</td>
+
+
+                    <td>{{ $rentPrice }}</td>
                     <td>
                         @if ($reservation->penalty)
                             {{ $reservation->penalty }}
@@ -134,6 +154,21 @@
             @endforeach
         </tbody>
     </table>
+
+    <!-- Display pagination links -->
+    <div class="d-flex justify-content-between align-items-center mt-2 mb-2">
+        <div>
+            @if ($reservations->lastPage() > 1)
+                <div class="pagination">
+                    {{ $reservations->links('pagination') }}
+                </div>
+            @endif
+        </div>
+        <div>
+            Showing {{ $reservations->firstItem() }} - {{ $reservations->lastItem() }} of {{ $reservations->total() }} results
+        </div>
+    </div>
+
 </div>
 
 @endsection

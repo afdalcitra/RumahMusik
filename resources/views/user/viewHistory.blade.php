@@ -30,7 +30,7 @@
                 $totalPrice = 0;
             @endphp
             
-            @foreach ($userReservations as $reservation)
+            @foreach ($reservations as $reservation)
             <tr>
                 <td>{{ $reservation->users->username }}</td>
                 <td>{{ $reservation->instrument->name }}</td>
