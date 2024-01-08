@@ -43,7 +43,7 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    //Login Logic
+    //Login Logics
     public function login(Request $request){
         $request->validate([
             'username'    => 'required|username',

@@ -7,6 +7,9 @@
         <div class="col-12 col-sm-8 col-md-6 m-auto">
             <div class="card border-0 shadow">
                 <div class="card-body text-center">
+
+                    <!-- START -->
+
                     <form action="{{ route('register') }}" method="POST" onsubmit="return validateForm()">
                         @csrf
                         <img src="{{ asset('images/logo.png') }}" alt="Rumah Musik Logo" width="100" height="100">
@@ -46,6 +49,8 @@
                             <a href="{{ route('loginPage') }}" class="nav-link mt-3">Already have an account?</a>
                         </div>
                     </form>
+
+                    <!-- END -->
                 </div>
             </div>
         </div>
